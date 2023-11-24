@@ -37,9 +37,9 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
       shipmentData.add("$i");
       ls.insertItem(
         shipmentData.length - 1,
-        duration: const Duration(milliseconds: 1000),
+        duration: const Duration(milliseconds: 100),
       );
-      await Future.delayed(const Duration(milliseconds: 1000));
+      await Future.delayed(const Duration(milliseconds: 100));
     }
   }
 

@@ -82,18 +82,18 @@ class AppTheme extends InheritedTheme {
           ),
           focusColor: AppColors.primary,
           suffixIconColor: const Color(0xFFC7C7C7),
-          hintStyle: theme.textTheme.bodySmall!.copyWith(
-            color: const Color(0XFFBFBFBF),
+          hintStyle: theme.textTheme.bodyMedium!.copyWith(
+            color: AppColors.grey.shade500,
           ),
           enabledBorder: textFieldBorder,
           errorBorder: textFieldBorder.copyWith(
             borderSide: BorderSide(color: borderSideErrorColor, width: 1.0),
           ),
           contentPadding: EdgeInsets.symmetric(
-            vertical: 13.0.h,
+            vertical: 10.0.h,
             horizontal: 12.0.h,
           ),
-          fillColor: Colors.white,
+          fillColor: AppColors.white.shade500,
           filled: true,
         ),
         textSelectionTheme: theme.textSelectionTheme.copyWith(

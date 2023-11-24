@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:moniepoint/core/core.dart';
+import 'package:moniepoint/presentation/dashboard/calculate_page.dart';
 import 'package:moniepoint/presentation/dashboard/home_page.dart';
 import 'package:moniepoint/presentation/dashboard/search_page.dart';
 import 'package:moniepoint/presentation/dashboard/shipment_history_page.dart';
@@ -38,7 +39,7 @@ class _DashboardPageState extends State<DashboardPage>
       _TabRouteView(
         icon: Icons.calculate_outlined,
         label: "Calculate",
-        page: const Text("", key: PageStorageKey("calculate")),
+        page: const CalculatePage(key: PageStorageKey("calculate")),
       ),
       _TabRouteView(
         icon: Icons.history_outlined,
