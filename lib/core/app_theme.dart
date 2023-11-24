@@ -13,7 +13,7 @@ class AppTheme extends InheritedTheme {
 
   ThemeData light(ThemeData theme) {
     final textFieldBorder = OutlineInputBorder(
-      borderSide: const BorderSide(color: Color(0XFFD9D9D9)),
+      borderSide: const BorderSide(color: Colors.white),
       borderRadius: BorderRadius.circular(5.0),
     );
     return ThemeData(

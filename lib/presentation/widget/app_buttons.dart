@@ -36,29 +36,27 @@ class _AppButtonState extends State<_AppButton> {
   @override
   Widget build(BuildContext context) {
     return AnimatedScale(
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 100),
       curve: Curves.easeIn,
       scale: _buttonScale,
+      onEnd: () => buttonScale = 1.0,
       child: Material(
-        elevation: 10,
         color: Colors.transparent,
-        child: InkResponse(
-          onTap: () async {
+        clipBehavior: Clip.hardEdge,
+        child: InkWell(
+          onTap: () {
             buttonScale = .9;
-            await Future.delayed(const Duration(milliseconds: 200));
-            buttonScale = 1.0;
             widget.onPressed?.call();
           },
           child: Ink(
             width: widget.width ?? double.maxFinite,
-            height:
-                widget.height ?? (Theme.of(context).buttonTheme.height - 15),
+            height: widget.height ?? (Theme.of(context).buttonTheme.height),
             decoration: widget.decoration ??
-                BoxDecoration(
+                ShapeDecoration(
+                  shape: const StadiumBorder(),
                   color: widget.onPressed == null
                       ? widget.color.shade200
                       : widget.color,
-                  borderRadius: BorderRadius.circular(8.0),
                 ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -70,9 +68,9 @@ class _AppButtonState extends State<_AppButton> {
                       )
                     : Text(
                         widget.text,
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                               color: widget.textColor,
-                              fontWeight: FontWeight.w800,
+                              fontWeight: FontWeight.w600,
                               //fontSize: 12.0.sp,
                             ),
                       ),

@@ -3,8 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:moniepoint/core/core.dart';
-import 'package:moniepoint/presentation/widget/titled_card.dart';
-import 'package:moniepoint/presentation/widget/widget.dart';
+import 'package:moniepoint/presentation/presentation.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -129,8 +128,9 @@ class _TrackingView extends StatelessWidget {
             ),
             Gap(6.0.h),
             const Divider(
-              thickness: 3,
+              thickness: 2,
             ),
+            Gap(5.0.h),
             Row(
               children: [
                 Expanded(
@@ -145,7 +145,7 @@ class _TrackingView extends StatelessWidget {
                 ),
                 const Expanded(
                   child: InfoTile(
-                    title: "Sender",
+                    title: "Time",
                     content: "2 day - 3 days",
                   ),
                 )
@@ -166,7 +166,7 @@ class _TrackingView extends StatelessWidget {
                 ),
                 const Expanded(
                   child: InfoTile(
-                    title: "Sender",
+                    title: "Status",
                     content: "2 day - 3 days",
                   ),
                 )
@@ -176,10 +176,23 @@ class _TrackingView extends StatelessWidget {
             const Divider(
               thickness: 3,
             ),
-            TextButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.add),
-              label: const Text("Add shop"),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.add,
+                  color: AppColors.secondary,
+                ),
+                Gap(5.0.w),
+                Text(
+                  "Add shop",
+                  style: textTheme.labelLarge!.copyWith(
+                    color: AppColors.secondary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             )
           ],
         ),
@@ -217,7 +230,7 @@ class InfoTile extends StatelessWidget {
                     content ?? "N/A",
                     style: textTheme.bodyMedium!.copyWith(
                       color: AppColors.dark,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                     ),
                   )
                 : child!

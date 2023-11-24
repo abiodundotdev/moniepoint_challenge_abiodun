@@ -119,9 +119,10 @@ class AppBackButton extends StatelessWidget {
     return IconButton(
       iconSize: IconTheme.of(context).size!,
       icon: Icon(
-        Platform.isIOS ? Icons.arrow_back : Icons.arrow_back,
+        Platform.isIOS ? Icons.keyboard_arrow_left : Icons.arrow_back,
+        size: 30.0,
       ),
-      color: (color ?? AppColors.dark),
+      color: (color ?? AppColors.white),
       tooltip: MaterialLocalizations.of(context).backButtonTooltip,
       onPressed: onPressed ?? () => Navigator.maybePop(context),
     );

@@ -13,29 +13,27 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
-  late TabController _tabController;
-
   final GlobalKey<AnimatedListState> animationListKey =
       GlobalKey<AnimatedListState>();
-
-  final List<String> shipmentData = [];
+  final List<ShipmentDataModel> shipmentData = AppFakeData.shipmentData;
+  List<ShipmentDataModel> animatedShipmentData = [];
+  late TextEditingController _searchFieldController;
 
   @override
   void initState() {
     super.initState();
-
+    _searchFieldController = TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _addItemsToAnimatedList();
+      _addItemsToAnimatedList(shipmentData);
     });
   }
 
-  void _addItemsToAnimatedList() async {
+  void _addItemsToAnimatedList(List<ShipmentDataModel> _shipmentData) async {
     final ls = animationListKey.currentState!;
-    for (var i = 0; i < 10; i++) {
-      shipmentData.add("$i");
+    for (var i = 0; i < _shipmentData.length; i++) {
+      animatedShipmentData.add(_shipmentData[i]);
       ls.insertItem(
-        shipmentData.length - 1,
-        duration: const Duration(milliseconds: 100),
+        animatedShipmentData.length - 1,
       );
       await Future.delayed(const Duration(milliseconds: 100));
     }
@@ -43,33 +41,58 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = context.theme.textTheme;
-
     return AppScaffold(
       appBar: CustomAppBar(
-        child: TextFormField(),
+        child: TextFormField(
+          controller: _searchFieldController,
+          onChanged: (val) {
+            final searchResult = shipmentData
+                .where((element) =>
+                    element.package.contains(val) ||
+                    element.trackingId.contains(val))
+                .toList();
+            animatedShipmentData = [];
+            _addItemsToAnimatedList(searchResult);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Gap(20.0),
-            AnimatedList(
-              physics: const BouncingScrollPhysics(),
-              initialItemCount: shipmentData.length,
-              shrinkWrap: true,
-              key: animationListKey,
-              itemBuilder: (context, index, animation) {
-                return SlideTransition(
-                  position: animation.drive(
-                    Tween<Offset>(
-                      begin: const Offset(0, 1),
-                      end: Offset.zero,
-                    ),
-                  ),
-                  child: const _ShipmentDetailsCard(),
-                );
-              },
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: ShapeDecoration(
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+              ),
+              child: ValueListenableBuilder(
+                valueListenable: _searchFieldController,
+                builder: (_, __, ___) {
+                  return AnimatedList(
+                    physics: const BouncingScrollPhysics(),
+                    initialItemCount: animatedShipmentData.length,
+                    shrinkWrap: true,
+                    key: animationListKey,
+                    itemBuilder: (context, index, animation) {
+                      return SlideTransition(
+                        position: animation.drive(
+                          Tween<Offset>(
+                            begin: const Offset(0, 1),
+                            end: Offset.zero,
+                          ),
+                        ),
+                        child: _ShipmentDetailsCard(
+                          shipmentData: animatedShipmentData[index],
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             )
           ],
         ),
@@ -79,7 +102,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 }
 
 class _ShipmentDetailsCard extends StatelessWidget {
-  const _ShipmentDetailsCard();
+  final ShipmentDataModel shipmentData;
+  const _ShipmentDetailsCard({required this.shipmentData});
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +114,7 @@ class _ShipmentDetailsCard extends StatelessWidget {
         child: Icon(Icons.bolt),
       ),
       title: Text(
-        "Mackook pro M2",
+        shipmentData.package,
         style: textTheme.bodyLarge!.copyWith(
           fontWeight: FontWeight.w700,
         ),
@@ -99,17 +123,17 @@ class _ShipmentDetailsCard extends StatelessWidget {
         style: textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w400),
         child: Row(
           children: [
-            const Text("3NE38388238823 "),
+            Text("${shipmentData.trackingId} "),
             CircleAvatar(
               radius: (DefaultTextStyle.of(context).style.fontSize ?? 0) / 4,
               backgroundColor: AppColors.grey,
             ),
-            const Text("  Barcelona "),
+            Text("  ${shipmentData.senderLocation} "),
             Icon(
               Icons.arrow_forward,
               size: DefaultTextStyle.of(context).style.fontSize,
             ),
-            const Text(" Moroco"),
+            Text(" ${shipmentData.receiverLocation}"),
           ],
         ),
       ),
@@ -150,7 +174,7 @@ class AppListTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     title,
-                    Gap(3.0.h),
+                    Gap(5.0.h),
                     subtitle,
                   ],
                 ),
@@ -165,4 +189,17 @@ class AppListTile extends StatelessWidget {
       ),
     );
   }
+}
+
+class ShipmentDataModel {
+  final String package;
+  final String trackingId;
+  final String receiverLocation;
+  final String senderLocation;
+
+  ShipmentDataModel(
+      {required this.package,
+      required this.trackingId,
+      required this.receiverLocation,
+      required this.senderLocation});
 }

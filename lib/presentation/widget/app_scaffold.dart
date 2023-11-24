@@ -49,7 +49,7 @@ class AppScaffoldState extends State<AppScaffold>
       final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
       final bool isFullScreen =
           parentRoute is PageRoute<dynamic> && parentRoute.fullscreenDialog;
-      if (widget.shouldAnimate) {
+      if (mounted && widget.shouldAnimate) {
         animationController.forward();
       }
     });
@@ -64,8 +64,9 @@ class AppScaffoldState extends State<AppScaffold>
   @override
   Widget build(BuildContext context) {
     final queryData = MediaQuery.of(context);
-    final padding = widget.padding;
     final systemPadding = queryData.padding;
+    final bodyBottomPadding =
+        (widget.bottom?.preferredSize.height ?? 0) + systemPadding.bottom;
     final appBarHeight = widget.appBar != null
         ? (widget.appBar!.preferredSize.height + systemPadding.top)
         : 0.0;
@@ -122,7 +123,7 @@ class AppScaffoldState extends State<AppScaffold>
                       child: Padding(
                         padding: widget.padding ??
                             EdgeInsets.fromLTRB(
-                                15.0, 0, 15.0, systemPadding.bottom),
+                                15.0, 0, 15.0, bodyBottomPadding),
                         child: widget.body,
                       ),
                     ),
