@@ -15,7 +15,6 @@ class ShipmentHistoryPage extends StatefulWidget {
 class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
     with TickerProviderStateMixin {
   late TabController _tabController;
-
   final GlobalKey<AnimatedListState> animationListKey =
       GlobalKey<AnimatedListState>();
 
@@ -46,8 +45,8 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
   @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.textTheme;
-
     const shipmentStatuses = ShipmentStatus.values;
+
     return AppScaffold(
       appBar: CustomAppBar(
         title: "Shipment history",
@@ -57,11 +56,32 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
           indicatorWeight: 4.0,
           isScrollable: true,
           controller: _tabController,
+          onTap: (index) {},
           tabs: List.generate(
             shipmentStatuses.length,
-            (index) => Tab(
-              text: shipmentStatuses[index].description,
-            ),
+            (index) => AnimatedBuilder(
+                animation: _tabController,
+                builder: (context, _) {
+                  bool isActive = index == _tabController.index;
+                  return Tab(
+                    child: Row(
+                      children: [
+                        Text(shipmentStatuses[index].description),
+                        Gap(8.0.w),
+                        Container(
+                          child: Text("${index + 3}"),
+                          padding: const EdgeInsetsDirectional.symmetric(
+                              vertical: 3.0, horizontal: 10.0),
+                          decoration: ShapeDecoration(
+                            color:
+                                isActive ? AppColors.secondary : Colors.white24,
+                            shape: const StadiumBorder(),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                }),
           ),
         ),
       ),
@@ -72,10 +92,12 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
             const Gap(20.0),
             Text(
               "Shipments",
-              style:
-                  textTheme.titleLarge!.copyWith(fontWeight: FontWeight.w700),
+              style: textTheme.titleLarge!.copyWith(
+                fontWeight: FontWeight.w600,
+                color: AppColors.dark,
+              ),
             ),
-            Gap(15.0.h),
+            Gap(13.0.h),
             AnimatedList(
               physics: const BouncingScrollPhysics(),
               initialItemCount: shipmentData.length,
@@ -90,7 +112,8 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
                   child: const _ShipmentDetailsCard(),
                 );
               },
-            )
+            ),
+            Gap(50.0.h),
           ],
         ),
       ),
@@ -104,9 +127,10 @@ class _ShipmentDetailsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.textTheme;
+    final inputTheme = context.theme;
     return Container(
       margin: EdgeInsets.only(bottom: 10.0.h),
-      padding: const EdgeInsets.all(15.0),
+      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0).w,
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
@@ -116,21 +140,37 @@ class _ShipmentDetailsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ActionChip(
-            backgroundColor: AppColors.grey.shade100,
-            label: Text(
-              "in-progress",
-              style: TextStyle(
-                color: AppColors.green,
-                fontWeight: FontWeight.w700,
-              ),
+          Container(
+            constraints: BoxConstraints(maxWidth: 130.0.w),
+            decoration: ShapeDecoration(
+              shape: const StadiumBorder(),
+              color: Colors.grey.shade200,
             ),
-            avatar: Icon(
-              Icons.refresh,
-              color: AppColors.green,
+            padding: EdgeInsets.symmetric(
+              horizontal: 12.0.w,
+              vertical: 6.0.h,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.cached,
+                  color: AppColors.green.shade500,
+                ),
+                Gap(10.0.w),
+                Expanded(
+                  child: Text(
+                    "in-progress",
+                    style: textTheme.bodyMedium!.copyWith(
+                      color: AppColors.green.shade500,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                )
+              ],
             ),
           ),
-          Gap(10.0.h),
+          Gap(5.0.h),
           Row(
             children: [
               Expanded(
@@ -140,46 +180,46 @@ class _ShipmentDetailsCard extends StatelessWidget {
                   children: [
                     Text(
                       "Arriving today!",
-                      style: textTheme.titleLarge!
-                          .copyWith(fontWeight: FontWeight.w800),
+                      style: textTheme.titleLarge!.copyWith(
+                        fontSize: 17.0,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     Gap(3.0.h),
                     Text(
-                      "Your delivery, #NEJ20089934122231 from atlanta, is arriving today!",
+                      "Your delivery, #NEJ20089122231 from atlanta, is arriving today!",
                       style:
                           textTheme.bodyMedium!.copyWith(color: AppColors.grey),
                     ),
                   ],
                 ),
               ),
-              Gap(20.0.w),
-              const Expanded(
-                child: CircleAvatar(
-                  radius: 30,
-                ),
+              Expanded(
+                flex: 2,
+                child: Image(image: AppImages.box),
               )
             ],
           ),
-          Gap(10.0.h),
+          Gap(5.0.h),
           Row(
             children: [
               Text(
-                "1400 USD",
+                Money(5000).formatted,
                 style: textTheme.bodyMedium!.copyWith(
                   color: AppColors.primary,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               Gap(8.0.w),
               CircleAvatar(
                 radius: 3,
-                backgroundColor: AppColors.grey,
+                backgroundColor: AppColors.grey.shade500,
               ),
               Gap(8.0.w),
               Text(
                 "Sep 20,2023",
                 style: textTheme.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],

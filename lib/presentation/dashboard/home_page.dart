@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:moniepoint/core/core.dart';
 import 'package:moniepoint/presentation/presentation.dart';
+import 'package:moniepoint/service_container.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,64 +16,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final textTheme = context.theme.textTheme;
     return AppScaffold(
-        //   shouldAnimate: true,
-        //      animationDuration: const Duration(milliseconds: 200),
+        shouldAnimate: true,
         appBar: const HomeAppBar(),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Gap(10.0.h),
+              Gap(15.0.h),
               const _TrackingView(),
-              Gap(10.0.h),
-              TitledCard(
-                title: "Available vehicles",
-                content: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: List.generate(
-                      6,
-                      (index) {
-                        return Container(
-                          margin: EdgeInsets.only(left: 10.0.w),
-                          decoration: ShapeDecoration(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Ocean Fright",
-                                      style: textTheme.bodyMedium!.copyWith(
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Text(
-                                      "International",
-                                      style: textTheme.bodySmall!.copyWith(
-                                        color: AppColors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              )
+              Gap(15.0.h),
+              const _AvailableVehiclesView(),
+              Gap(55.0.h),
             ],
           ),
         ));
@@ -85,7 +40,6 @@ class _TrackingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.textTheme;
-
     return TitledCard(
       title: "Tracking",
       content: Container(
@@ -102,27 +56,33 @@ class _TrackingView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Shippment Number",
-                      style:
-                          textTheme.bodyMedium!.copyWith(color: AppColors.grey),
-                    ),
-                    Gap(5.0.h),
-                    Text(
-                      "NEJ200002172772781872",
-                      style: textTheme.bodyMedium!.copyWith(
-                        color: AppColors.black,
-                        fontWeight: FontWeight.w700,
+                Expanded(
+                  flex: 6,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Shippment Number",
+                        style: textTheme.bodySmall!.copyWith(
+                          color: AppColors.grey.shade600,
+                        ),
                       ),
-                    ),
-                  ],
+                      Gap(5.0.h),
+                      Text(
+                        "NEJ200002172772781872",
+                        style: textTheme.bodyMedium!.copyWith(
+                          color: AppColors.black,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                const Spacer(),
-                const CircleAvatar(
-                  radius: 20.0,
+                Expanded(
+                  flex: 1,
+                  child: Image(
+                    image: AppImages.tractor,
+                  ),
                 ),
               ],
             ),
@@ -135,18 +95,41 @@ class _TrackingView extends StatelessWidget {
               children: [
                 Expanded(
                   child: InfoTile(
-                    leading: CircleAvatar(
-                      backgroundColor: AppColors.secondary.shade800,
-                      child: const Icon(Icons.bolt),
+                    leading: Container(
+                      padding: const EdgeInsets.all(10.0),
+                      decoration: ShapeDecoration(
+                        color: AppColors.secondary.withOpacity(.5),
+                        shape: const CircleBorder(),
+                      ),
+                      child: Image(
+                        image: AppImages.outgoing,
+                        width: context.theme.iconTheme.size,
+                        height: context.theme.iconTheme.size,
+                      ),
                     ),
                     title: "Sender",
-                    content: "Atlanta",
+                    content: "Atlanta, 5234",
                   ),
                 ),
-                const Expanded(
+                Expanded(
                   child: InfoTile(
                     title: "Time",
-                    content: "2 day - 3 days",
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 4,
+                          backgroundColor: AppColors.green,
+                        ),
+                        Gap(4.0.w),
+                        Text(
+                          "2 day - 3 days",
+                          style: textTheme.bodyMedium!.copyWith(
+                            color: AppColors.dark,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 )
               ],
@@ -156,18 +139,27 @@ class _TrackingView extends StatelessWidget {
               children: [
                 Expanded(
                   child: InfoTile(
-                    leading: CircleAvatar(
-                      backgroundColor: AppColors.green.shade800,
-                      child: const Icon(Icons.bolt),
+                    leading: Container(
+                      padding: const EdgeInsets.all(10.0),
+                      decoration: ShapeDecoration(
+                        color: AppColors.green.withOpacity(.3),
+                        shape: const CircleBorder(),
+                      ),
+                      child: Image(
+                        image: AppImages.incoming,
+                        width: context.theme.iconTheme.size,
+                        height: context.theme.iconTheme.size,
+                      ),
                     ),
                     title: "Reciever",
-                    content: "Chicago, 42",
+                    content: "Chicago, 6342",
                   ),
                 ),
+                Gap(30.0.w),
                 const Expanded(
                   child: InfoTile(
                     title: "Status",
-                    content: "2 day - 3 days",
+                    content: "Waiting to collect",
                   ),
                 )
               ],
@@ -176,25 +168,125 @@ class _TrackingView extends StatelessWidget {
             const Divider(
               thickness: 3,
             ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.add,
-                  color: AppColors.secondary,
-                ),
-                Gap(5.0.w),
-                Text(
-                  "Add shop",
-                  style: textTheme.labelLarge!.copyWith(
+            Gap(6.0.h),
+            InkResponse(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.add,
                     color: AppColors.secondary,
-                    fontWeight: FontWeight.w500,
                   ),
-                ),
-              ],
+                  Gap(5.0.h),
+                  Text(
+                    "Add Stop",
+                    style: textTheme.labelLarge!.copyWith(
+                      color: AppColors.secondary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AvailableVehiclesView extends StatefulWidget {
+  const _AvailableVehiclesView();
+
+  @override
+  State<_AvailableVehiclesView> createState() => __AvailableVehiclesViewState();
+}
+
+class __AvailableVehiclesViewState extends State<_AvailableVehiclesView> {
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = context.theme.textTheme;
+    final vehicles = [
+      _VehicleData(
+        type: "Ocean freight",
+        category: "International",
+        image: AppImages.cargo,
+      ),
+      _VehicleData(
+        type: "Cargo freight",
+        category: "Reliable",
+        image: AppImages.truck,
+      ),
+      _VehicleData(
+        type: "Air freight",
+        category: "International",
+        image: AppImages.plane,
+      )
+    ];
+    return TitledCard(
+      title: "Available vehicles",
+      content: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: List.generate(
+            vehicles.length,
+            (index) {
+              final width = MediaQuery.of(context).size.width;
+              return Container(
+                width: width / 2.7,
+                height: 160.0.h,
+                margin: EdgeInsets.only(right: 15.0.w),
+                decoration: ShapeDecoration(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              vehicles[index].type,
+                              style: textTheme.bodyLarge!.copyWith(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16.0,
+                                color: AppColors.dark,
+                              ),
+                            ),
+                            Gap(2.0.h),
+                            Text(
+                              vehicles[index].category,
+                              style: textTheme.bodySmall!.copyWith(
+                                color: AppColors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 7,
+                      child: LayoutBuilder(builder: (context, cons) {
+                        return Image(
+                          width: cons.maxWidth,
+                          image: vehicles[index].image,
+                          fit: BoxFit.fill,
+                        );
+                      }),
+                    )
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -213,7 +305,6 @@ class InfoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.textTheme;
-
     return Row(
       children: [
         if (leading != null) ...[leading!, Gap(10.0.h)],
@@ -251,86 +342,111 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AnnotatedRegion(
       value: const SystemUiOverlayStyle(),
       child: Container(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
         color: AppColors.primary,
         child: SafeArea(
           child: Column(
             children: [
               Expanded(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Colors.green,
+                    ClipOval(
+                      child: Image(image: AppImages.profileImage),
                     ),
-                    Gap(20.0.w),
+                    Gap(15.0.w),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                            child: Text(
-                              "Location",
-                              style: textTheme.bodySmall!
-                                  .copyWith(color: Colors.white),
+                            child: Text.rich(
+                              TextSpan(
+                                children: [
+                                  WidgetSpan(
+                                      child: Icon(
+                                    AppIcons.nearMe,
+                                    size: 18.0,
+                                    color: AppColors.white.shade100,
+                                  )),
+                                  const TextSpan(text: "  Your Location"),
+                                ],
+                              ),
+                              style: textTheme.bodyLarge!.copyWith(
+                                color: AppColors.white.shade100,
+                              ),
                             ),
                           ),
                           Expanded(
                             child: Text.rich(
-                              const TextSpan(
-                                text: "Wethmier, illion ",
+                              TextSpan(
+                                text: "Wethmier, illionois",
                                 children: [
                                   WidgetSpan(
                                     child: Icon(
-                                      Icons.arrow_drop_down,
+                                      AppIcons.keyboardArrowDown,
+                                      size: 20.0,
+                                      color: Colors.white,
                                     ),
                                   )
                                 ],
                               ),
-                              style: textTheme.bodyMedium!
-                                  .copyWith(color: Colors.white),
+                              style: textTheme.bodyMedium!.copyWith(
+                                  color: Colors.white, fontSize: 16.0),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const Spacer(),
-                    const CircleAvatar(
-                      radius: 20,
+                    CircleAvatar(
+                      radius: 20.w,
                       backgroundColor: Colors.white,
+                      child: Icon(
+                        AppIcons.notification,
+                        size: 25.0.sp,
+                      ),
                     )
                   ],
                 ),
               ),
               Gap(10.0.h),
               Expanded(
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Enter the reciept number",
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: Container(
-                      padding: const EdgeInsets.all(5.0),
-                      decoration: ShapeDecoration(
-                        color: AppColors.secondary,
-                        shape: const CircleBorder(),
+                child: Hero(
+                  tag: "searchHero",
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        hintText: "Enter the reciept number ... ",
+                        prefixIcon: Icon(Icons.search, size: 22.0.w),
+                        suffixIcon: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 6.w),
+                          child: CircleAvatar(
+                            backgroundColor: AppColors.secondary,
+                            child: Transform.rotate(
+                              angle: Angle(90).toRadians,
+                              child: Icon(
+                                AppIcons.flip,
+                                size: 22.0.w,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(100.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(100.0),
+                        ),
                       ),
-                      child: const Icon(
-                        Icons.scale,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
+                      readOnly: true,
+                      onTap: () => SC.get.navigator.dash.toSearchPage(),
                     ),
                   ),
                 ),
               ),
-              Gap(8.0.h),
+              Gap(10.0.h),
             ],
           ),
         ),
@@ -339,5 +455,14 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight + 50.0.h);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight + 60.0.h);
+}
+
+class _VehicleData {
+  final String type;
+  final String category;
+  final ImageProvider image;
+
+  _VehicleData(
+      {required this.type, required this.category, required this.image});
 }

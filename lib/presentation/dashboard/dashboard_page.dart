@@ -22,6 +22,7 @@ class _DashboardPageState extends State<DashboardPage>
   final PageStorageBucket _pageStorageBucket = PageStorageBucket();
   late TabController _tabRoutesController;
   late List<_TabRouteView> _tabRouteViews;
+  late AnimationController bottomAnimator;
 
   @override
   void initState() {
@@ -53,6 +54,8 @@ class _DashboardPageState extends State<DashboardPage>
       length: _tabRouteViews.length,
       vsync: this,
     );
+    bottomAnimator = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 2000));
   }
 
   @override
@@ -75,8 +78,10 @@ class _DashboardPageState extends State<DashboardPage>
         ),
       ),
       bottom: PreferredSize(
-        preferredSize: Size.fromHeight(kBottomNavigationBarHeight + 30.0.h),
+        preferredSize: Size.fromHeight(kBottomNavigationBarHeight + 32.0.h),
         child: Container(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
           decoration: BoxDecoration(
             color: context.theme.bottomNavigationBarTheme.backgroundColor,
             boxShadow: [
@@ -102,6 +107,11 @@ class _DashboardPageState extends State<DashboardPage>
                     ),
                   ),
                 ),
+                onTap: (index) {
+                  if (index != 0) {
+                    bottomAnimator.forward();
+                  }
+                },
                 tabs: List.generate(
                   _tabRouteViews.length,
                   (index) => Tab(

@@ -44,8 +44,9 @@ class _AppButtonState extends State<_AppButton> {
         color: Colors.transparent,
         clipBehavior: Clip.hardEdge,
         child: InkWell(
-          onTap: () {
+          onTap: () async {
             buttonScale = .9;
+            await Future.delayed(const Duration(milliseconds: 500));
             widget.onPressed?.call();
           },
           child: Ink(

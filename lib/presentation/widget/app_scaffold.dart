@@ -131,11 +131,7 @@ class AppScaffoldState extends State<AppScaffold>
                 ),
                 LayoutId(
                   id: _LayoutSlot.bottom,
-                  child: SafeArea(
-                    top: false,
-                    bottom: true,
-                    child: widget.bottom ?? const SizedBox(),
-                  ),
+                  child: widget.bottom ?? const SizedBox(),
                 ),
               ],
             ),

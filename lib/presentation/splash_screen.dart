@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 3000));
+        vsync: this, duration: const Duration(milliseconds: 1500));
     sequantialAnimtion = TweenSequence<double>([
       TweenSequenceItem(tween: ConstantTween(0.0), weight: 20),
       TweenSequenceItem(tween: Tween(begin: 0, end: 0.8), weight: 60),
@@ -40,8 +40,11 @@ class _SplashScreenState extends State<SplashScreen>
             return Container(
               padding: const EdgeInsets.all(40.0),
               decoration: BoxDecoration(
-                color: AppColors.white,
-              ),
+                  color: AppColors.white,
+                  image: DecorationImage(
+                    image: AppImages.splashBg,
+                    fit: BoxFit.cover,
+                  )),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

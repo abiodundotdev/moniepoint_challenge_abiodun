@@ -43,17 +43,50 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return AppScaffold(
       appBar: CustomAppBar(
-        child: TextFormField(
-          controller: _searchFieldController,
-          onChanged: (val) {
-            final searchResult = shipmentData
-                .where((element) =>
-                    element.package.contains(val) ||
-                    element.trackingId.contains(val))
-                .toList();
-            animatedShipmentData = [];
-            _addItemsToAnimatedList(searchResult);
-          },
+        titleSpacing: 0,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0.0, 0, 30.0, 0).w,
+          child: Hero(
+            tag: "searchHero",
+            child: Material(
+              type: MaterialType.transparency,
+              child: TextFormField(
+                controller: _searchFieldController,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.search, size: 22.0.w),
+                  suffixIcon: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 6.w),
+                    child: CircleAvatar(
+                      backgroundColor: AppColors.secondary,
+                      child: Transform.rotate(
+                        angle: Angle(90).toRadians,
+                        child: Icon(
+                          AppIcons.flip,
+                          size: 22.0.w,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100.0),
+                  ),
+                ),
+                onChanged: (val) {
+                  final searchResult = shipmentData
+                      .where((element) =>
+                          element.package.contains(val) ||
+                          element.trackingId.contains(val))
+                      .toList();
+                  animatedShipmentData = [];
+                  _addItemsToAnimatedList(searchResult);
+                },
+              ),
+            ),
+          ),
         ),
       ),
       body: SingleChildScrollView(

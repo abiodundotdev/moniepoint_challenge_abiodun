@@ -25,7 +25,7 @@ class _ShipmentSuccessfulState extends State<ShipmentSuccessful>
     int animationLength = 4;
     super.initState();
     _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
+        vsync: this, duration: const Duration(milliseconds: 1000));
     _animationsList = List.generate(
       animationLength,
       (index) => CurvedAnimation(
@@ -67,7 +67,15 @@ class _ShipmentSuccessfulState extends State<ShipmentSuccessful>
                   end: Offset.zero,
                 ),
               ),
-              child: Image(image: AppImages.box)),
+              child: ScaleTransition(
+                scale: _animationsList[1].drive(
+                  Tween<double>(
+                    begin: 0,
+                    end: 1,
+                  ),
+                ),
+                child: Image(image: AppImages.box),
+              )),
           SlideTransition(
             position: _animationsList[2].drive(
               Tween<Offset>(

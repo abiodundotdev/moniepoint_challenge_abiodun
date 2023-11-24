@@ -52,7 +52,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       titleSpacing: titleSpacing ?? NavigationToolbar.kMiddleSpacing,
       automaticallyImplyLeading: automaticallyImplyLeading,
       backgroundColor: AppColors.primary,
-      leading: leadingWidget,
+      leading: AppBackButton(onPressed: onPop),
       centerTitle: true,
       systemOverlayStyle: systemOverlayStyle,
       title: _buildTitle(context),
@@ -73,7 +73,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         title!,
         style: titleTextStyle ??
             Theme.of(context).textTheme.bodySmall!.copyWith(
-                  fontSize: 16.0.sp,
+                  fontSize: 14.0.sp,
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
@@ -84,7 +84,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight + 10.0.h);
 }
 
 class AppCloseButton extends StatelessWidget {
