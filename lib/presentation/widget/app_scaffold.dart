@@ -6,6 +6,7 @@ enum _LayoutSlot {
   appBar,
   background,
   bottom,
+  fab,
 }
 
 //TODO: Assert when cleaning up
@@ -20,6 +21,7 @@ class AppScaffold extends StatefulWidget {
     this.appBar,
     this.padding,
     this.bottom,
+    this.fab,
   }) : super(key: key);
 
   final PreferredSizeWidget? appBar;
@@ -28,6 +30,7 @@ class AppScaffold extends StatefulWidget {
   final Widget? background;
   final bool shouldAnimate;
   final EdgeInsets? padding;
+  final Widget? fab;
   final PreferredSizeWidget? bottom;
   final Duration animationDuration;
 

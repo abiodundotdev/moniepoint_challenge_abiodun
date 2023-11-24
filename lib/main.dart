@@ -24,6 +24,7 @@ class _AppState extends State<App> {
         minTextAdapt: true,
         builder: (context, child) {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             navigatorKey: rootNavigatorKey,
             theme: AppTheme.of(context).light(context.theme),
             darkTheme: AppTheme.of(context).dark(context.theme),

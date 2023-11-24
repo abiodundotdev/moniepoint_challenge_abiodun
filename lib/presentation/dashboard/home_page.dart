@@ -91,78 +91,80 @@ class _TrackingView extends StatelessWidget {
               thickness: 2,
             ),
             Gap(5.0.h),
-            Row(
-              children: [
-                Expanded(
-                  child: InfoTile(
-                    leading: Container(
-                      padding: const EdgeInsets.all(10.0),
-                      decoration: ShapeDecoration(
-                        color: AppColors.secondary.withOpacity(.5),
-                        shape: const CircleBorder(),
-                      ),
-                      child: Image(
-                        image: AppImages.outgoing,
-                        width: context.theme.iconTheme.size,
-                        height: context.theme.iconTheme.size,
-                      ),
-                    ),
-                    title: "Sender",
-                    content: "Atlanta, 5234",
-                  ),
-                ),
-                Expanded(
-                  child: InfoTile(
-                    title: "Time",
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 4,
-                          backgroundColor: AppColors.green,
-                        ),
-                        Gap(4.0.w),
-                        Text(
-                          "2 day - 3 days",
-                          style: textTheme.bodyMedium!.copyWith(
-                            color: AppColors.dark,
-                            fontWeight: FontWeight.w500,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InfoTile(
+                        leading: Container(
+                          padding: const EdgeInsets.all(10.0),
+                          decoration: ShapeDecoration(
+                            color: AppColors.secondary.withOpacity(.5),
+                            shape: const CircleBorder(),
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
-            Gap(30.0.h),
-            Row(
-              children: [
-                Expanded(
-                  child: InfoTile(
-                    leading: Container(
-                      padding: const EdgeInsets.all(10.0),
-                      decoration: ShapeDecoration(
-                        color: AppColors.green.withOpacity(.3),
-                        shape: const CircleBorder(),
+                          child: Image(
+                            image: AppImages.outgoing,
+                            width: context.theme.iconTheme.size,
+                            height: context.theme.iconTheme.size,
+                          ),
+                        ),
+                        title: "Sender",
+                        content: "Atlanta, 5234",
                       ),
-                      child: Image(
-                        image: AppImages.incoming,
-                        width: context.theme.iconTheme.size,
-                        height: context.theme.iconTheme.size,
+                      Gap(30.0.h),
+                      InfoTile(
+                        leading: Container(
+                          padding: const EdgeInsets.all(10.0),
+                          decoration: ShapeDecoration(
+                            color: AppColors.green.withOpacity(.3),
+                            shape: const CircleBorder(),
+                          ),
+                          child: Image(
+                            image: AppImages.incoming,
+                            width: context.theme.iconTheme.size,
+                            height: context.theme.iconTheme.size,
+                          ),
+                        ),
+                        title: "Reciever",
+                        content: "Chicago, 6342",
                       ),
-                    ),
-                    title: "Reciever",
-                    content: "Chicago, 6342",
+                    ],
                   ),
-                ),
-                Gap(30.0.w),
-                const Expanded(
-                  child: InfoTile(
-                    title: "Status",
-                    content: "Waiting to collect",
-                  ),
-                )
-              ],
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InfoTile(
+                        title: "Time",
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 4,
+                              backgroundColor: AppColors.green,
+                            ),
+                            Gap(4.0.w),
+                            Text(
+                              "2 day - 3 days",
+                              style: textTheme.bodyMedium!.copyWith(
+                                color: AppColors.dark,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Gap(30.0.h),
+                      const InfoTile(
+                        title: "Status",
+                        content: "Waiting to collect",
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
             Gap(6.0.h),
             const Divider(
@@ -243,8 +245,7 @@ class __AvailableVehiclesViewState extends State<_AvailableVehiclesView> {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Stack(
                   children: [
                     Expanded(
                       flex: 3,
@@ -278,7 +279,7 @@ class __AvailableVehiclesViewState extends State<_AvailableVehiclesView> {
                         return Image(
                           width: cons.maxWidth,
                           image: vehicles[index].image,
-                          fit: BoxFit.fill,
+                          fit: BoxFit.cover,
                         );
                       }),
                     )
