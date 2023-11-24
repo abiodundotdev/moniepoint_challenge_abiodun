@@ -1,0 +1,68 @@
+name: moniepoint
+description: Ubenwa health coding challenge
+
+
+publish_to: 'none'
+version: 1.0.0
+
+environment:
+  sdk: ">=2.19.0 <3.0.0"
+
+dependencies:
+  dio: ^5.3.3
+  flutter:
+    sdk: flutter
+  flutter_screenutil: ^5.7.0
+  gap: ^3.0.1
+  get_it: ^7.6.0
+  intl: ^0.18.1
+  sentry_flutter: ^7.12.0
+  shimmer: ^3.0.0
+  
+
+dev_dependencies:
+  build_runner: ^2.1.11
+  flutter_launcher_icons: ^0.13.1
+  flutter_lints: ^1.0.0
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  json_serializable: ^6.2.0
+  test:
+  
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/icon.png"
+  
+
+flutter:
+  uses-material-design: true
+  assets:
+   - assets/images/
+   - assets/fonts/
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter/Inter-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Inter/Inter-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Inter/Inter-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Inter/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter/Inter-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Inter/Inter-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Inter/Inter-Black.ttf
+          weight: 900
+
