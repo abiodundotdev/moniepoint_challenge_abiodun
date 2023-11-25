@@ -67,6 +67,7 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
     return AppScaffold(
       appBar: CustomAppBar(
         automaticallyImplyLeading: true,
+        key: AppWidgetKeys.appBar,
         title: "Shipment history",
         bottom: TabBar(
           labelColor: Colors.white,

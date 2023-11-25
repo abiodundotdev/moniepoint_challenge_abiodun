@@ -73,20 +73,27 @@ class _HomePageState extends State<HomePage>
       animation:
           const AppScaffoldAnimation(appBar: true, body: true, bottom: true),
       animationDuration: SC.get.sessionStorage.appAnimationDuration.value,
-      appBar: const HomeAppBar(),
+      appBar: HomeAppBar(
+        key: AppWidgetKeys.appBar,
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Gap(15.0.h),
-            const _TrackingView(),
+            _TrackingView(
+              key: AppWidgetKeys.homeTrackingWidget,
+            ),
             Gap(15.0.h),
-            const _AvailableVehiclesView(),
+            _AvailableVehiclesView(
+              key: AppWidgetKeys.homeAvailableVehiclesWidget,
+            ),
             Gap(80.0.h),
           ],
         ),
       ),
       bottom: PreferredSize(
+        key: AppWidgetKeys.bottomNavBar,
         preferredSize: Size.fromHeight(
           kBottomNavigationBarHeight + systemPadding.bottom,
         ),
@@ -258,7 +265,7 @@ class _HomePageState extends State<HomePage>
 }
 
 class _TrackingView extends StatelessWidget {
-  const _TrackingView();
+  const _TrackingView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -422,7 +429,7 @@ class _TrackingView extends StatelessWidget {
 }
 
 class _AvailableVehiclesView extends StatefulWidget {
-  const _AvailableVehiclesView();
+  const _AvailableVehiclesView({super.key});
 
   @override
   State<_AvailableVehiclesView> createState() => __AvailableVehiclesViewState();
