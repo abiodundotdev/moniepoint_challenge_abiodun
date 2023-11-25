@@ -31,6 +31,7 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
 
   void _addItemsToAnimatedList() async {
     final ls = animationListKey.currentState!;
+    _removeItemsFromAnimatedList();
     for (var i = 0; i < 10; i++) {
       shipmentData.add("$i");
       ls.insertItem(
@@ -41,6 +42,23 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
     }
   }
 
+  void _removeItemsFromAnimatedList() {
+    final ls = animationListKey.currentState!;
+    for (var i = 0; i < shipmentData.length; i++) {
+      shipmentData.removeAt(i);
+      ls.removeItem(i, (context, animation) {
+        return const SizedBox();
+      });
+    }
+    return;
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.textTheme;
@@ -48,6 +66,7 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
 
     return AppScaffold(
       appBar: CustomAppBar(
+        automaticallyImplyLeading: true,
         title: "Shipment history",
         bottom: TabBar(
           labelColor: Colors.white,
@@ -55,7 +74,9 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
           indicatorWeight: 4.0,
           isScrollable: true,
           controller: _tabController,
-          onTap: (index) {},
+          onTap: (index) {
+            _addItemsToAnimatedList();
+          },
           tabs: List.generate(
             shipmentStatuses.length,
             (index) => AnimatedBuilder(
@@ -180,6 +201,7 @@ class _ShipmentDetailsCard extends StatelessWidget {
                       "Arriving today!",
                       style: textTheme.titleLarge!.copyWith(
                         fontSize: 17.0,
+                        color: AppColors.dark,
                         fontWeight: FontWeight.w700,
                       ),
                     ),

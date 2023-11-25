@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
+final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
 
 class RouteTransition {
   static PageRoute<T> slideIn<T extends Object>(Widget widget,
       {String? name, bool fullscreenDialog = false, RouteSettings? settings}) {
-    // final settings = name != null ? RouteSettings(name: name) : null;
     return Platform.isIOS
         ? CupertinoPageRoute<T>(
             builder: (_) => widget,

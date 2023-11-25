@@ -99,7 +99,7 @@ class AppTheme extends InheritedTheme {
           filled: true,
         ),
         textSelectionTheme: theme.textSelectionTheme.copyWith(
-          cursorColor: AppColors.primary,
+          cursorColor: AppColors.dark,
           selectionColor: AppColors.primary.shade300,
           selectionHandleColor: AppColors.primary.shade300,
         ),
@@ -193,7 +193,7 @@ class AppTheme extends InheritedTheme {
         filled: true,
       ),
       textSelectionTheme: theme.textSelectionTheme.copyWith(
-        cursorColor: AppColors.primary,
+        cursorColor: AppColors.dark,
         selectionColor: AppColors.primary,
         selectionHandleColor: AppColors.primary.shade300,
       ),

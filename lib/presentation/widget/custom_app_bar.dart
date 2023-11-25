@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:moniepoint/core/core.dart';
+import 'package:moniepoint/service_container.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   CustomAppBar({
@@ -49,7 +50,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
 
     return AppBar(
-      titleSpacing: titleSpacing ?? NavigationToolbar.kMiddleSpacing,
+      // titleSpacing: titleSpacing ?? NavigationToolbar.kMiddleSpacing,
       automaticallyImplyLeading: automaticallyImplyLeading,
       backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       leading: AppBackButton(onPressed: onPop),
@@ -124,7 +125,7 @@ class AppBackButton extends StatelessWidget {
       ),
       color: (color ?? AppColors.white),
       tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-      onPressed: onPressed ?? () => Navigator.maybePop(context),
+      onPressed: onPressed ?? () => SC.get.navigator.dash.pop(),
     );
   }
 }

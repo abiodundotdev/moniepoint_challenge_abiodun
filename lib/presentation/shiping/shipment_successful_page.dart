@@ -17,15 +17,15 @@ class ShipmentSuccessful extends StatefulWidget {
 class _ShipmentSuccessfulState extends State<ShipmentSuccessful>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
-
   late List<Animation<double>> _animationsList;
+  final animationDuration = SC.get.sessionStorage.appAnimationDuration.value;
 
   @override
   void initState() {
     int animationLength = 4;
     super.initState();
-    _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1000));
+    _animationController =
+        AnimationController(vsync: this, duration: animationDuration);
     _animationsList = List.generate(
       animationLength,
       (index) => CurvedAnimation(
@@ -97,7 +97,7 @@ class _ShipmentSuccessfulState extends State<ShipmentSuccessful>
                   Gap(8.0.h),
                   const Countup(
                     duration: Duration(seconds: 1),
-                    to: 5000,
+                    to: 1460,
                   ),
                   Gap(8.0.h),
                   Text(
@@ -146,18 +146,20 @@ class CountupState extends State<Countup> {
   @override
   void initState() {
     super.initState();
-    if (mounted) {
-      _timer = Timer.periodic(
-          Duration(
-            microseconds: widget.to ~/ (widget.duration?.inMicroseconds ?? 100),
-          ), (timer) {
-        if (currentCount < widget.to) {
-          setState(() {
-            currentCount++;
-          });
-        }
-      });
-    }
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        _timer = Timer.periodic(
+            const Duration(
+              milliseconds: 50,
+            ), (timer) {
+          if (currentCount < widget.to) {
+            setState(() {
+              currentCount++;
+            });
+          }
+        });
+      },
+    );
   }
 
   @override

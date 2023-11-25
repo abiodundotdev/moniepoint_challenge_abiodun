@@ -206,7 +206,26 @@ class _AvailableVehiclesView extends StatefulWidget {
   State<_AvailableVehiclesView> createState() => __AvailableVehiclesViewState();
 }
 
-class __AvailableVehiclesViewState extends State<_AvailableVehiclesView> {
+class __AvailableVehiclesViewState extends State<_AvailableVehiclesView>
+    with TickerProviderStateMixin {
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
+    controller.forward();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.textTheme;
@@ -271,13 +290,23 @@ class __AvailableVehiclesViewState extends State<_AvailableVehiclesView> {
                         ],
                       ),
                     ),
-                    LayoutBuilder(builder: (context, cons) {
-                      return Image(
-                        width: cons.maxWidth,
-                        image: vehicles[index].image,
-                        fit: BoxFit.cover,
-                      );
-                    })
+                    SlideTransition(
+                      position: controller.drive(
+                        Tween(
+                          begin: const Offset(7, 0),
+                          end: Offset.zero,
+                        ),
+                      ),
+                      child: LayoutBuilder(
+                        builder: (context, cons) {
+                          return Image(
+                            width: cons.maxWidth,
+                            image: vehicles[index].image,
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      ),
+                    )
                   ],
                 ),
               );

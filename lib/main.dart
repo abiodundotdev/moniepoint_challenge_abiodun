@@ -32,6 +32,7 @@ class _AppState extends State<App> {
                   return MaterialApp(
                     debugShowCheckedModeBanner: false,
                     themeMode: themeMode,
+                    navigatorObservers: [routeObserver],
                     navigatorKey: rootNavigatorKey,
                     theme: AppTheme.of(context).light(context.theme),
                     darkTheme: AppTheme.of(context).dark(context.theme),

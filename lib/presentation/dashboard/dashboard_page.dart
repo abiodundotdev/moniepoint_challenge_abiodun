@@ -11,8 +11,8 @@ import 'package:moniepoint/service_container.dart';
 class _TabRouteView {
   final String label;
   final IconData icon;
-  final Widget page;
-  _TabRouteView({required this.label, required this.icon, required this.page});
+  final VoidCallback onTap;
+  _TabRouteView({required this.label, required this.icon, required this.onTap});
 }
 
 class DashboardPage extends StatefulWidget {
@@ -23,49 +23,68 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage>
-    with TickerProviderStateMixin {
-  final PageStorageBucket _pageStorageBucket = PageStorageBucket();
+    with TickerProviderStateMixin, RouteAware {
+  //final PageStorageBucket _pageStorageBucket = PageStorageBucket();
   late TabController _tabRoutesController;
   late List<_TabRouteView> _tabRouteViews;
   late AnimationController bottomAnimator;
+  final navigator = SC.get.navigator;
+
+  @override
+  void didPopNext() {
+    bottomAnimator.reverse();
+    _tabRoutesController.animateTo(0);
+    super.didPopNext();
+  }
 
   @override
   void initState() {
     super.initState();
+    //Listen to route to know when user navigates from dashboard to another screen
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      routeObserver.subscribe(this, ModalRoute.of(context)!);
+    });
+
     _tabRouteViews = <_TabRouteView>[
       _TabRouteView(
         icon: Icons.home_outlined,
         label: "Home",
-        page: const HomePage(key: PageStorageKey("home")),
+        onTap: () {},
+        // onTap: const HomePage(key: PageStorageKey("home")),
       ),
       _TabRouteView(
-        icon: Icons.calculate_outlined,
-        label: "Calculate",
-        page: const CalculatePage(key: PageStorageKey("calculate")),
-      ),
+          icon: Icons.calculate_outlined,
+          label: "Calculate",
+          onTap: () => navigator.dash.toCalculate()
+          //  page: const CalculatePage(key: PageStorageKey("calculate")),
+          ),
       _TabRouteView(
-        icon: Icons.history_outlined,
-        label: "Shipment",
-        page: const ShipmentHistoryPage(key: PageStorageKey("shippment")),
-      ),
+          icon: Icons.history_outlined,
+          label: "Shipment",
+          onTap: () => navigator.dash.toShipmentHistory()
+          //  page: const ShipmentHistoryPage(key: PageStorageKey("shippment")),
+          ),
       _TabRouteView(
-        icon: Icons.person_outlined,
-        label: "Profile",
-        page: const SearchPage(key: PageStorageKey("profile")),
-      ),
+          icon: Icons.person_outlined,
+          label: "Profile",
+          onTap: () => navigator.dash.toSearchPage()
+          // page: const SearchPage(key: PageStorageKey("profile")),
+          ),
     ];
-
     _tabRoutesController = TabController(
       length: _tabRouteViews.length,
       vsync: this,
     );
     bottomAnimator = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 2000));
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
   }
 
   @override
   void dispose() {
     _tabRoutesController.dispose();
+    routeObserver.unsubscribe(this);
     super.dispose();
   }
 
@@ -73,67 +92,74 @@ class _DashboardPageState extends State<DashboardPage>
   Widget build(BuildContext context) {
     return AppScaffold(
       padding: EdgeInsets.zero,
-      body: PageStorage(
-        bucket: _pageStorageBucket,
-        child: TabBarView(
-          physics: const NeverScrollableScrollPhysics(),
-          controller: _tabRoutesController,
-          children: List.generate(
-              _tabRouteViews.length, (index) => _tabRouteViews[index].page),
-        ),
-      ),
+      body: const HomePage(),
       bottom: PreferredSize(
-        preferredSize: Size.fromHeight(kBottomNavigationBarHeight + 32.0.h),
-        child: Container(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
-          decoration: BoxDecoration(
-            color: context.theme.bottomNavigationBarTheme.backgroundColor,
-            boxShadow: [
-              BoxShadow(
-                offset: const Offset(0, -4),
-                blurRadius: 8,
-                color: const Color(0xFF000000).withOpacity(.05),
-              ),
-            ],
-          ),
-          child: AnimatedBuilder(
-            animation: _tabRoutesController,
+        preferredSize: Size.fromHeight(kBottomNavigationBarHeight + 20.0.h),
+        child: AnimatedBuilder(
+            animation: bottomAnimator,
             builder: (context, _) {
-              return TabBar(
-                labelColor: AppColors.adaptivePrimary,
-                unselectedLabelColor: AppColors.grey,
-                controller: _tabRoutesController,
-                indicator: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: AppColors.adaptivePrimary,
-                      width: 4.0.h,
-                    ),
+              return SlideTransition(
+                position: bottomAnimator.drive(Tween<Offset>(
+                  begin: Offset.zero,
+                  end: const Offset(0, 2),
+                )),
+                child: Container(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).padding.bottom),
+                  decoration: BoxDecoration(
+                    color:
+                        context.theme.bottomNavigationBarTheme.backgroundColor,
+                    boxShadow: [
+                      BoxShadow(
+                        offset: const Offset(0, -4),
+                        blurRadius: 8,
+                        color: const Color(0xFF000000).withOpacity(.05),
+                      ),
+                    ],
                   ),
-                ),
-                onTap: (index) {
-                  if (index != 0) {
-                    bottomAnimator.forward();
-                  }
-                },
-                tabs: List.generate(
-                  _tabRouteViews.length,
-                  (index) => Tab(
-                    text: _tabRouteViews[index].label,
-                    iconMargin: const EdgeInsets.only(bottom: 1.0),
-                    icon: Icon(
-                      _tabRouteViews[index].icon,
-                      color: _tabRoutesController.index == index
-                          ? AppColors.adaptivePrimary
-                          : AppColors.grey,
-                    ),
+                  child: AnimatedBuilder(
+                    animation: _tabRoutesController,
+                    builder: (context, _) {
+                      return TabBar(
+                        labelColor: AppColors.adaptivePrimary,
+                        unselectedLabelColor: AppColors.grey,
+                        controller: _tabRoutesController,
+                        indicator: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                              color: AppColors.adaptivePrimary,
+                              width: 4.0.h,
+                            ),
+                          ),
+                        ),
+                        onTap: (index) async {
+                          if (index != 0) {
+                            await Future.delayed(
+                                _tabRoutesController.animationDuration);
+                            bottomAnimator.forward();
+                            await Future.delayed(bottomAnimator.duration!);
+                            _tabRouteViews[index].onTap.call();
+                          }
+                        },
+                        tabs: List.generate(
+                          _tabRouteViews.length,
+                          (index) => Tab(
+                            text: _tabRouteViews[index].label,
+                            iconMargin: const EdgeInsets.only(bottom: 1.0),
+                            icon: Icon(
+                              _tabRouteViews[index].icon,
+                              color: _tabRoutesController.index == index
+                                  ? AppColors.adaptivePrimary
+                                  : AppColors.grey,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               );
-            },
-          ),
-        ),
+            }),
       ),
       fab: PreferredSize(
         child: InkResponse(
@@ -151,6 +177,16 @@ class _DashboardPageState extends State<DashboardPage>
     );
   }
 
+  // PageStorage(
+  //       bucket: _pageStorageBucket,
+  //       child: TabBarView(
+  //         physics: const NeverScrollableScrollPhysics(),
+  //         controller: _tabRoutesController,
+  //         children: List.generate(
+  //             _tabRouteViews.length, (index) => _tabRouteViews[index].page),
+  //       ),
+  //     )
+
   void _handleFabTap() {
     final textTheme = context.theme.textTheme;
     final sessionStorage = SC.get.sessionStorage;
@@ -159,8 +195,11 @@ class _DashboardPageState extends State<DashboardPage>
 
     showModalBottomSheet(
       clipBehavior: Clip.hardEdge,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
+        ),
       ),
       context: context,
       builder: (context) {
@@ -212,21 +251,21 @@ class _DashboardPageState extends State<DashboardPage>
                       Divider(thickness: 2, color: AppColors.dark),
                       const Gap(10.0),
                       ValueListenableBuilder(
-                          valueListenable: appThemeController,
-                          builder: (context, _, __) {
-                            return SwitchListTile.adaptive(
-                              title:
-                                  const Text("Switch from light to dark mode"),
-                              value: appThemeController.value.isDark,
-                              onChanged: (isDarkMode) {
-                                if (!isDarkMode) {
-                                  appThemeController.value = ThemeMode.light;
-                                } else {
-                                  appThemeController.value = ThemeMode.dark;
-                                }
-                              },
-                            );
-                          })
+                        valueListenable: appThemeController,
+                        builder: (context, _, __) {
+                          return SwitchListTile.adaptive(
+                            title: const Text("Switch from light to dark mode"),
+                            value: appThemeController.value.isDark,
+                            onChanged: (isDarkMode) {
+                              if (!isDarkMode) {
+                                appThemeController.value = ThemeMode.light;
+                              } else {
+                                appThemeController.value = ThemeMode.dark;
+                              }
+                            },
+                          );
+                        },
+                      )
                     ],
                   );
                 },

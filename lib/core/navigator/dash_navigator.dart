@@ -24,4 +24,12 @@ class DashNavigator extends BaseNavigator {
   void toSearchPage() {
     push(const SearchPage());
   }
+
+  void toCalculate() {
+    push(const CalculatePage());
+  }
+
+  void toShipmentHistory() {
+    push(const ShipmentHistoryPage());
+  }
 }
