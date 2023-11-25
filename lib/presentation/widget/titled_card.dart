@@ -37,7 +37,7 @@ class TitledCard extends StatelessWidget {
                   theme.bodyLarge!.copyWith(
                     fontWeight: FontWeight.w600,
                     fontSize: 16.0,
-                    color: titleColor ?? AppColors.dark,
+                    color: titleColor ?? AppColors.adaptiveDark,
                   ),
             ),
             if (extra != null && onExtraPressed != null)

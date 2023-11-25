@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:moniepoint/core/core.dart';
-import 'package:moniepoint/presentation/widget/app_scaffold.dart';
-import 'package:moniepoint/presentation/widget/custom_app_bar.dart';
+import 'package:moniepoint/presentation/presentation.dart';
 
 class ShipmentHistoryPage extends StatefulWidget {
   const ShipmentHistoryPage({super.key});
@@ -94,7 +93,7 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
               "Shipments",
               style: textTheme.titleLarge!.copyWith(
                 fontWeight: FontWeight.w600,
-                color: AppColors.dark,
+                color: AppColors.adaptiveDark,
               ),
             ),
             Gap(13.0.h),
@@ -127,7 +126,6 @@ class _ShipmentDetailsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = context.theme.textTheme;
-    final inputTheme = context.theme;
     return Container(
       margin: EdgeInsets.only(bottom: 10.0.h),
       padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0).w,

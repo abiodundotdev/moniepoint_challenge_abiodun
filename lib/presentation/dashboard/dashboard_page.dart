@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'package:moniepoint/core/core.dart';
 import 'package:moniepoint/presentation/presentation.dart';
+
+import 'dart:ui' as ui;
+
+import 'package:moniepoint/service_container.dart';
 
 class _TabRouteView {
   final String label;
@@ -96,13 +101,13 @@ class _DashboardPageState extends State<DashboardPage>
             animation: _tabRoutesController,
             builder: (context, _) {
               return TabBar(
-                labelColor: AppColors.primary,
+                labelColor: AppColors.adaptivePrimary,
                 unselectedLabelColor: AppColors.grey,
                 controller: _tabRoutesController,
                 indicator: BoxDecoration(
                   border: Border(
                     top: BorderSide(
-                      color: AppColors.primary,
+                      color: AppColors.adaptivePrimary,
                       width: 4.0.h,
                     ),
                   ),
@@ -120,7 +125,7 @@ class _DashboardPageState extends State<DashboardPage>
                     icon: Icon(
                       _tabRouteViews[index].icon,
                       color: _tabRoutesController.index == index
-                          ? AppColors.primary
+                          ? AppColors.adaptivePrimary
                           : AppColors.grey,
                     ),
                   ),
@@ -130,6 +135,106 @@ class _DashboardPageState extends State<DashboardPage>
           ),
         ),
       ),
+      fab: PreferredSize(
+        child: InkResponse(
+          onTap: _handleFabTap,
+          child: const CircleAvatar(
+            child: Icon(
+              Icons.bolt,
+              color: Colors.white,
+              size: 30.0,
+            ),
+          ),
+        ),
+        preferredSize: Size.square(55.0.w),
+      ),
+    );
+  }
+
+  void _handleFabTap() {
+    final textTheme = context.theme.textTheme;
+    final sessionStorage = SC.get.sessionStorage;
+    final animationDurationController = sessionStorage.appAnimationDuration;
+    final appThemeController = sessionStorage.appThemeMode;
+
+    showModalBottomSheet(
+      clipBehavior: Clip.hardEdge,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      context: context,
+      builder: (context) {
+        return BackdropFilter(
+          filter: ui.ImageFilter.blur(
+            sigmaX: 2.0,
+            sigmaY: 2.0,
+          ),
+          child: Material(
+            child: Container(
+              constraints: BoxConstraints(maxHeight: 200.0.h),
+              color: Theme.of(context).scaffoldBackgroundColor,
+              child: ValueListenableBuilder(
+                valueListenable: animationDurationController,
+                builder: (context, _, __) {
+                  return Column(
+                    children: [
+                      const Gap(10.0),
+                      Text(
+                        "Slide to change animation duration",
+                        style: textTheme.titleLarge!.copyWith(
+                          fontSize: 16.0,
+                          color: AppColors.adaptiveDark,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const Gap(10.0),
+                      Slider(
+                        max: 10000,
+                        min: 100,
+                        value: animationDurationController.value.inMilliseconds
+                            .toDouble(),
+                        divisions: 100,
+                        onChanged: (val) {
+                          animationDurationController.value = Duration(
+                            milliseconds: val.toInt(),
+                          );
+                        },
+                      ),
+                      const Gap(10.0),
+                      Text(
+                        "${animationDurationController.value.inMilliseconds} Milliseconds",
+                        style: textTheme.titleLarge!.copyWith(
+                          color: AppColors.adaptiveDark,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const Gap(10.0),
+                      Divider(thickness: 2, color: AppColors.dark),
+                      const Gap(10.0),
+                      ValueListenableBuilder(
+                          valueListenable: appThemeController,
+                          builder: (context, _, __) {
+                            return SwitchListTile.adaptive(
+                              title:
+                                  const Text("Switch from light to dark mode"),
+                              value: appThemeController.value.isDark,
+                              onChanged: (isDarkMode) {
+                                if (!isDarkMode) {
+                                  appThemeController.value = ThemeMode.light;
+                                } else {
+                                  appThemeController.value = ThemeMode.dark;
+                                }
+                              },
+                            );
+                          })
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

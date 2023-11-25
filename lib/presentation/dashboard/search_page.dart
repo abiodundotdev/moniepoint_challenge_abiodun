@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:moniepoint/core/core.dart';
-import 'package:moniepoint/presentation/widget/app_scaffold.dart';
-import 'package:moniepoint/presentation/widget/custom_app_bar.dart';
+import 'package:moniepoint/presentation/presentation.dart';
+import 'package:moniepoint/service_container.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -16,8 +16,11 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   final GlobalKey<AnimatedListState> animationListKey =
       GlobalKey<AnimatedListState>();
   final List<ShipmentDataModel> shipmentData = AppFakeData.shipmentData;
+
   List<ShipmentDataModel> animatedShipmentData = [];
   late TextEditingController _searchFieldController;
+
+  final animationDuration = SC.get.sessionStorage.appAnimationDuration.value;
 
   @override
   void initState() {
@@ -28,15 +31,37 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     });
   }
 
+  @override
+  void dispose() {
+    _searchFieldController.dispose();
+    super.dispose();
+  }
+
   void _addItemsToAnimatedList(List<ShipmentDataModel> _shipmentData) async {
     final ls = animationListKey.currentState!;
+    _removeItemsFromAnimatedList();
     for (var i = 0; i < _shipmentData.length; i++) {
       animatedShipmentData.add(_shipmentData[i]);
       ls.insertItem(
         animatedShipmentData.length - 1,
       );
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future.delayed(
+        animationDuration.inMilliseconds > 100
+            ? const Duration(milliseconds: 100)
+            : animationDuration,
+      );
     }
+  }
+
+  void _removeItemsFromAnimatedList() {
+    final ls = animationListKey.currentState!;
+    for (var i = 0; i < animatedShipmentData.length; i++) {
+      animatedShipmentData.removeAt(i);
+      ls.removeItem(i, (context, animation) {
+        return const SizedBox();
+      });
+    }
+    return;
   }
 
   @override
@@ -45,7 +70,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
       appBar: CustomAppBar(
         titleSpacing: 0,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(0.0, 0, 30.0, 0).w,
+          padding: const EdgeInsets.fromLTRB(0.0, 0, 15.0, 0).w,
           child: Hero(
             tag: "searchHero",
             child: Material(
@@ -53,6 +78,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
               child: TextFormField(
                 controller: _searchFieldController,
                 decoration: InputDecoration(
+                  hintText: "Enter the reciept number ... ",
                   prefixIcon: Icon(Icons.search, size: 22.0.w),
                   suffixIcon: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 6.w),
@@ -78,10 +104,13 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                 onChanged: (val) {
                   final searchResult = shipmentData
                       .where((element) =>
-                          element.package.contains(val) ||
-                          element.trackingId.contains(val))
+                          element.package
+                              .toLowerCase()
+                              .contains(val.toLowerCase()) ||
+                          element.trackingId
+                              .toLowerCase()
+                              .contains(val.toLowerCase()))
                       .toList();
-                  animatedShipmentData = [];
                   _addItemsToAnimatedList(searchResult);
                 },
               ),
@@ -144,16 +173,20 @@ class _ShipmentDetailsCard extends StatelessWidget {
     return AppListTile(
       leading: const CircleAvatar(
         radius: 20.0,
-        child: Icon(Icons.bolt),
+        child: Icon(Icons.inbox),
       ),
       title: Text(
         shipmentData.package,
         style: textTheme.bodyLarge!.copyWith(
           fontWeight: FontWeight.w700,
+          color: AppColors.black,
         ),
       ),
       subtitle: DefaultTextStyle(
-        style: textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w400),
+        style: textTheme.bodySmall!.copyWith(
+          fontWeight: FontWeight.w400,
+          color: AppColors.black,
+        ),
         child: Row(
           children: [
             Text("${shipmentData.trackingId} "),
@@ -164,6 +197,7 @@ class _ShipmentDetailsCard extends StatelessWidget {
             Text("  ${shipmentData.senderLocation} "),
             Icon(
               Icons.arrow_forward,
+              color: AppColors.dark,
               size: DefaultTextStyle.of(context).style.fontSize,
             ),
             Text(" ${shipmentData.receiverLocation}"),

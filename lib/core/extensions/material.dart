@@ -7,3 +7,7 @@ extension XBuildContext on BuildContext {
 extension XThemeMode on ThemeMode {
   bool get isDark => this == ThemeMode.dark;
 }
+
+extension XObject on Object? {
+  bool get isNull => this == null;
+}

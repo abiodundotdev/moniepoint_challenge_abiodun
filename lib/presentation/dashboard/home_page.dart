@@ -18,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return AppScaffold(
         shouldAnimate: true,
+        animationDuration: SC.get.sessionStorage.appAnimationDuration.value,
         appBar: const HomeAppBar(),
         body: SingleChildScrollView(
           child: Column(
@@ -44,7 +45,7 @@ class _TrackingView extends StatelessWidget {
       title: "Tracking",
       content: Container(
         decoration: ShapeDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
@@ -247,42 +248,36 @@ class __AvailableVehiclesViewState extends State<_AvailableVehiclesView> {
                 ),
                 child: Stack(
                   children: [
-                    Expanded(
-                      flex: 3,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              vehicles[index].type,
-                              style: textTheme.bodyLarge!.copyWith(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16.0,
-                                color: AppColors.dark,
-                              ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            vehicles[index].type,
+                            style: textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16.0,
+                              color: AppColors.dark,
                             ),
-                            Gap(2.0.h),
-                            Text(
-                              vehicles[index].category,
-                              style: textTheme.bodySmall!.copyWith(
-                                color: AppColors.grey,
-                              ),
+                          ),
+                          Gap(2.0.h),
+                          Text(
+                            vehicles[index].category,
+                            style: textTheme.bodySmall!.copyWith(
+                              color: AppColors.grey,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    Expanded(
-                      flex: 7,
-                      child: LayoutBuilder(builder: (context, cons) {
-                        return Image(
-                          width: cons.maxWidth,
-                          image: vehicles[index].image,
-                          fit: BoxFit.cover,
-                        );
-                      }),
-                    )
+                    LayoutBuilder(builder: (context, cons) {
+                      return Image(
+                        width: cons.maxWidth,
+                        image: vehicles[index].image,
+                        fit: BoxFit.cover,
+                      );
+                    })
                   ],
                 ),
               );
@@ -344,7 +339,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       value: const SystemUiOverlayStyle(),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        color: AppColors.primary,
+        color: Theme.of(context).appBarTheme.backgroundColor,
         child: SafeArea(
           child: Column(
             children: [

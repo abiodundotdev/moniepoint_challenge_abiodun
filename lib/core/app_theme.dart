@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:moniepoint/core/core.dart';
+import 'package:moniepoint/service_container.dart';
 
 class AppTheme extends InheritedTheme {
   const AppTheme({super.key, required Widget child}) : super(child: child);
@@ -42,6 +43,7 @@ class AppTheme extends InheritedTheme {
           tileColor: const Color(0XFFBCBBC1).withOpacity(.20),
         ),
         appBarTheme: theme.appBarTheme.copyWith(
+          backgroundColor: AppColors.primary,
           titleTextStyle: const TextStyle(
             fontWeight: FontWeight.w800,
             fontSize: 14.0,
@@ -116,7 +118,7 @@ class AppTheme extends InheritedTheme {
 
     return ThemeData(
       useMaterial3: false,
-      scaffoldBackgroundColor: AppColors.black,
+      scaffoldBackgroundColor: AppColors.dark,
       primarySwatch: AppColors.primary,
       primaryColor: AppColors.primary,
       brightness: Brightness.dark,
@@ -136,8 +138,9 @@ class AppTheme extends InheritedTheme {
             displayColor: textDarkColor,
             fontFamily: AppFonts.inter,
           ),
-      iconTheme: theme.iconTheme.copyWith(size: 20, color: AppColors.white),
+      iconTheme: theme.iconTheme.copyWith(size: 20, color: AppColors.dark),
       appBarTheme: theme.appBarTheme.copyWith(
+        backgroundColor: AppColors.dark,
         titleTextStyle: const TextStyle(
           fontWeight: FontWeight.w800,
           fontSize: 14.0,
@@ -145,6 +148,12 @@ class AppTheme extends InheritedTheme {
       ),
       listTileTheme: theme.listTileTheme.copyWith(
         tileColor: const Color(0XFFBCBBC1).withOpacity(.20),
+      ),
+      sliderTheme: theme.sliderTheme.copyWith(
+        thumbColor: AppColors.white,
+      ),
+      bottomNavigationBarTheme: theme.bottomNavigationBarTheme.copyWith(
+        backgroundColor: AppColors.dark,
       ),
       canvasColor: AppColors.dark,
       shadowColor: Colors.grey.shade400,
@@ -162,22 +171,29 @@ class AppTheme extends InheritedTheme {
       inputDecorationTheme: InputDecorationTheme(
         isDense: true,
         border: textFieldBorder,
-        focusedBorder: textFieldBorder,
+        focusedBorder: textFieldBorder.copyWith(
+          borderSide: BorderSide(
+            color: AppColors.primary,
+          ),
+        ),
+        focusColor: AppColors.primary,
         suffixIconColor: const Color(0xFFC7C7C7),
-        hintStyle:
-            theme.textTheme.bodySmall!.copyWith(color: AppColors.grey.shade900),
+        hintStyle: theme.textTheme.bodyMedium!.copyWith(
+          color: AppColors.grey.shade500,
+        ),
         enabledBorder: textFieldBorder,
         errorBorder: textFieldBorder.copyWith(
-            borderSide: BorderSide(color: borderSideErrorColor, width: 1.0)),
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 10.0,
-          horizontal: 12.0,
+          borderSide: BorderSide(color: borderSideErrorColor, width: 1.0),
         ),
-        fillColor: AppColors.grey.shade500,
+        contentPadding: EdgeInsets.symmetric(
+          vertical: 10.0.h,
+          horizontal: 12.0.h,
+        ),
+        fillColor: Colors.white,
         filled: true,
       ),
       textSelectionTheme: theme.textSelectionTheme.copyWith(
-        cursorColor: Colors.white,
+        cursorColor: AppColors.primary,
         selectionColor: AppColors.primary,
         selectionHandleColor: AppColors.primary.shade300,
       ),
@@ -186,6 +202,11 @@ class AppTheme extends InheritedTheme {
       disabledColor: hintColor,
       dividerColor: borderSideColor,
     );
+  }
+
+  static Color get adaptiveDark {
+    final theme = SC.get.sessionStorage.appThemeMode;
+    return theme.value.isDark ? Colors.white : AppColors.dark;
   }
 
   static AppTheme? maybeOf(BuildContext context) {

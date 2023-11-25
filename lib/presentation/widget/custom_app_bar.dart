@@ -51,7 +51,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       titleSpacing: titleSpacing ?? NavigationToolbar.kMiddleSpacing,
       automaticallyImplyLeading: automaticallyImplyLeading,
-      backgroundColor: AppColors.primary,
+      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       leading: AppBackButton(onPressed: onPop),
       centerTitle: true,
       systemOverlayStyle: systemOverlayStyle,

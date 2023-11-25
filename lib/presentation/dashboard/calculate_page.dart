@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:moniepoint/core/core.dart';
-import 'package:moniepoint/presentation/widget/app_buttons.dart';
-import 'package:moniepoint/presentation/widget/app_scaffold.dart';
-import 'package:moniepoint/presentation/widget/custom_app_bar.dart';
-import 'package:moniepoint/presentation/widget/grouped.dart';
-import 'package:moniepoint/presentation/widget/titled_card.dart';
+import 'package:moniepoint/presentation/presentation.dart';
 import 'package:moniepoint/service_container.dart';
 
 class CalculatePage extends StatefulWidget {
@@ -19,15 +15,14 @@ class CalculatePage extends StatefulWidget {
 class _CalculatePageState extends State<CalculatePage>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
-
   late List<Animation<double>> _animationsList;
+  final duration = SC.get.sessionStorage.appAnimationDuration.value;
 
   @override
   void initState() {
     int animationLength = 4;
     super.initState();
-    _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 2000));
+    _animationController = AnimationController(vsync: this, duration: duration);
     _animationsList = List.generate(
       animationLength,
       (index) => Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
@@ -55,7 +50,7 @@ class _CalculatePageState extends State<CalculatePage>
     final textTheme = context.theme.textTheme;
     final _titleStyle = textTheme.titleLarge!.copyWith(
       fontWeight: FontWeight.w600,
-      color: AppColors.black,
+      color: AppColors.adaptiveDark,
       fontSize: 17.0,
     );
     return AppScaffold(
@@ -94,22 +89,22 @@ class _CalculatePageState extends State<CalculatePage>
                       children: [
                         TextFormField(
                           decoration: inputDecoration(
-                            "Sender location",
-                            Icons.unarchive_outlined,
+                            hintText: "Sender location",
+                            icon: Icons.unarchive_outlined,
                           ),
                         ),
                         Gap(10.0.h),
                         TextFormField(
                           decoration: inputDecoration(
-                            "Reciever location",
-                            Icons.unarchive_outlined,
+                            hintText: "Reciever location",
+                            icon: Icons.unarchive_outlined,
                           ),
                         ),
                         Gap(10.0.h),
                         TextFormField(
                           decoration: inputDecoration(
-                            "Approx weight",
-                            Icons.scale_outlined,
+                            hintText: "Approx weight",
+                            icon: Icons.scale_outlined,
                           ),
                         ),
                       ],
@@ -138,11 +133,12 @@ class _CalculatePageState extends State<CalculatePage>
                     titleColor: AppColors.grey,
                     content: TextFormField(
                       decoration: inputDecoration(
-                        "Box",
-                        Icons.add_box,
+                        hintText: "Box",
+                        prefixIcon: ImageIcon(AppImages.box),
                       ).copyWith(
                         hintStyle: textTheme.bodyMedium!.copyWith(
                           fontWeight: FontWeight.w700,
+                          color: AppColors.dark,
                         ),
                         fillColor: Colors.white,
                         suffixIcon: const Icon(
@@ -200,7 +196,8 @@ class _CalculatePageState extends State<CalculatePage>
     );
   }
 
-  InputDecoration inputDecoration(String hintText, IconData icon) {
+  InputDecoration inputDecoration(
+      {required String hintText, Widget? prefixIcon, IconData? icon}) {
     return InputDecoration(
       hintText: hintText,
       prefixIcon: Padding(
@@ -208,11 +205,12 @@ class _CalculatePageState extends State<CalculatePage>
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon),
+            if (!icon.isNull) Icon(icon),
+            if (!prefixIcon.isNull) prefixIcon!,
             const Gap(6.0),
             Container(
               height: 22.0.h,
-              color: AppColors.grey,
+              color: AppColors.grey.shade500,
               width: 1.0,
             ),
           ],

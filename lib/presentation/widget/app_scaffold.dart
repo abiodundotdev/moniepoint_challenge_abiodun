@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:moniepoint/core/core.dart';
 
 enum _LayoutSlot {
@@ -30,7 +31,7 @@ class AppScaffold extends StatefulWidget {
   final Widget? background;
   final bool shouldAnimate;
   final EdgeInsets? padding;
-  final Widget? fab;
+  final PreferredSizeWidget? fab;
   final PreferredSizeWidget? bottom;
   final Duration animationDuration;
 
@@ -82,10 +83,12 @@ class AppScaffoldState extends State<AppScaffold>
             color: theme.scaffoldBackgroundColor,
             child: CustomMultiChildLayout(
               delegate: _AppScaffoldDelegate(
+                  padding: widget.padding,
                   viewInsets: queryData.viewInsets,
+                  fabSize: widget.fab?.preferredSize,
                   bottomHeight: (widget.bottom?.preferredSize.height ?? 0)),
               children: <Widget>[
-                if (widget.appBar != null)
+                if (!widget.appBar.isNull)
                   LayoutId(
                     id: _LayoutSlot.appBar,
                     child: SlideTransition(
@@ -132,10 +135,16 @@ class AppScaffoldState extends State<AppScaffold>
                     ),
                   ),
                 ),
-                LayoutId(
-                  id: _LayoutSlot.bottom,
-                  child: widget.bottom ?? const SizedBox(),
-                ),
+                if (!widget.bottom.isNull)
+                  LayoutId(
+                    id: _LayoutSlot.bottom,
+                    child: widget.bottom ?? const SizedBox(),
+                  ),
+                if (!widget.fab.isNull)
+                  LayoutId(
+                    id: _LayoutSlot.fab,
+                    child: widget.fab ?? const SizedBox(),
+                  ),
               ],
             ),
           );
@@ -144,10 +153,17 @@ class AppScaffoldState extends State<AppScaffold>
 }
 
 class _AppScaffoldDelegate extends MultiChildLayoutDelegate {
-  _AppScaffoldDelegate({this.viewInsets, this.bottomHeight});
+  _AppScaffoldDelegate({
+    this.fabSize,
+    this.viewInsets,
+    this.bottomHeight,
+    this.padding,
+  });
 
   final EdgeInsets? viewInsets;
   final double? bottomHeight;
+  final Size? fabSize;
+  final EdgeInsets? padding;
 
   @override
   void performLayout(Size size) {
@@ -185,6 +201,20 @@ class _AppScaffoldDelegate extends MultiChildLayoutDelegate {
           BoxConstraints.tight(Size(size.width, _bottomHeight)));
       positionChild(_LayoutSlot.bottom,
           Offset(0, looseConstraints.maxHeight - _bottomHeight));
+    }
+
+    if (hasChild(_LayoutSlot.fab)) {
+      layoutChild(_LayoutSlot.fab,
+          BoxConstraints.tight(Size(fabSize!.width, fabSize!.height)));
+
+      positionChild(
+        _LayoutSlot.fab,
+        Offset(
+          looseConstraints.maxWidth - fabSize!.width - (20.0.w),
+          looseConstraints.maxHeight -
+              (_bottomHeight + fabSize!.height + (20.h)),
+        ),
+      );
     }
   }
 

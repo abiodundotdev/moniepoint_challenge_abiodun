@@ -91,7 +91,7 @@ class _ShipmentSuccessfulState extends State<ShipmentSuccessful>
                   Text(
                     "Total Estimated Amount",
                     style: textTheme.titleLarge!.copyWith(
-                      color: AppColors.dark,
+                      color: AppColors.adaptiveDark,
                     ),
                   ),
                   Gap(8.0.h),

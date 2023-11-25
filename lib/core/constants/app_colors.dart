@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:moniepoint/core/core.dart';
+import 'package:moniepoint/service_container.dart';
 
 /// Appcolors from the desing system
 
 class AppColors {
   AppColors._();
+  static var appTheme = SC.get.sessionStorage.appThemeMode;
   static const Color basePrimary = Color(0XFF4A3391);
   static const Color baseSecondary = Color(0XFFF17A21);
   static const Color baseGreen = Color(0XFF3ec429);
@@ -25,6 +28,22 @@ class AppColors {
       700: Color(0xFF55399a),
       800: Color(0xFF4b3391),
       900: Color(0xFF3a2880)
+    },
+  );
+
+  static MaterialColor allWhite = MaterialColor(
+    baseWhite.value,
+    const <int, Color>{
+      50: baseWhite,
+      100: baseWhite,
+      200: baseWhite,
+      300: baseWhite,
+      400: baseWhite,
+      500: baseWhite,
+      600: baseWhite,
+      700: baseWhite,
+      800: baseWhite,
+      900: baseWhite
     },
   );
 
@@ -59,6 +78,22 @@ class AppColors {
       900: Color(0xFF181e32)
     },
   );
+
+  static MaterialColor get adaptiveDark {
+    return appTheme.value.isDark ? AppColors.allWhite : AppColors.dark;
+  }
+
+  static MaterialColor get adaptiveWhite {
+    return appTheme.value.isDark ? AppColors.black : AppColors.white;
+  }
+
+  static MaterialColor get adaptivePrimary {
+    return appTheme.value.isDark ? AppColors.white : AppColors.primary;
+  }
+
+  static MaterialColor get adaptiveSecondary {
+    return appTheme.value.isDark ? AppColors.white : AppColors.secondary;
+  }
 
   static MaterialColor green = MaterialColor(
     baseGreen.value,

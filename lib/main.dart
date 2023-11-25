@@ -18,20 +18,31 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
-    return AppTheme(
-      child: ScreenUtilInit(
-        designSize: const Size(360, 690),
-        minTextAdapt: true,
-        builder: (context, child) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            navigatorKey: rootNavigatorKey,
-            theme: AppTheme.of(context).light(context.theme),
-            darkTheme: AppTheme.of(context).dark(context.theme),
-            home: const SplashScreen(),
-          );
-        },
-      ),
+    return ValueListenableBuilder(
+      valueListenable: SC.get.sessionStorage.appAnimationDuration,
+      builder: (context, _, __) {
+        return AppTheme(
+          child: ScreenUtilInit(
+            designSize: const Size(360, 690),
+            minTextAdapt: true,
+            builder: (context, child) {
+              return ValueListenableBuilder(
+                valueListenable: SC.get.sessionStorage.appThemeMode,
+                builder: (context, themeMode, __) {
+                  return MaterialApp(
+                    debugShowCheckedModeBanner: false,
+                    themeMode: themeMode,
+                    navigatorKey: rootNavigatorKey,
+                    theme: AppTheme.of(context).light(context.theme),
+                    darkTheme: AppTheme.of(context).dark(context.theme),
+                    home: const SplashScreen(),
+                  );
+                },
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

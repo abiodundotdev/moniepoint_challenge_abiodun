@@ -15,6 +15,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
   late AnimationController animationController;
+  late AnimationController alignmentAnimation;
   late Animation sequantialAnimtion;
   bool isCompleted = false;
 
@@ -28,6 +29,13 @@ class _SplashScreenState extends State<SplashScreen>
       TweenSequenceItem(tween: Tween(begin: 0, end: 0.8), weight: 60),
       TweenSequenceItem(tween: Tween(begin: 0.8, end: 1), weight: 20),
     ]).animate(animationController);
+    alignmentAnimation = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500))
+      ..addListener(() {
+        if (alignmentAnimation.isCompleted) {
+          SC.get.navigator.dash.toDashboard();
+        }
+      });
     animationController.forward();
   }
 
@@ -65,7 +73,7 @@ class _SplashScreenState extends State<SplashScreen>
                               onEnd: () async {
                                 await Future.delayed(
                                     const Duration(seconds: 2));
-                                SC.get.navigator.dash.toDashboard();
+                                alignmentAnimation.forward();
                               },
                               child: Text(
                                 "MoveMate",
@@ -95,6 +103,21 @@ class _SplashScreenState extends State<SplashScreen>
                         ),
                       )
                     ],
+                  ),
+                  Align(
+                    alignment: Alignment(0, .06 * alignmentAnimation.value),
+                    child: Visibility(
+                      visible: alignmentAnimation.value > .5,
+                      child: const Text(
+                        "Your movement partener ...",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.0,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
