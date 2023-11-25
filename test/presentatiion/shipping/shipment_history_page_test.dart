@@ -39,7 +39,7 @@ void main() {
       );
 
       testWidgets(
-        'Verify has at least one inprogress and pending shipment',
+        'Verify has at least one in-progress and pending shipment',
         (WidgetTester widgetTester) async {
           await widgetTester.pumpWidget(shipmentHistoryPage);
           await widgetTester.pumpAndSettle();
@@ -47,6 +47,27 @@ void main() {
           final pending = find.text("pending");
           expect(inProgress, findsAtLeastNWidgets(1));
           expect(pending, findsAtLeastNWidgets(1));
+        },
+      );
+
+      testWidgets(
+        'Verify has shipment statuses tabbar widget',
+        (WidgetTester widgetTester) async {
+          await widgetTester.pumpWidget(shipmentHistoryPage);
+          await widgetTester.pumpAndSettle();
+          final statusesTabbar = find.byType(TabBar);
+          expect(statusesTabbar, findsOneWidget);
+        },
+      );
+
+      testWidgets(
+        'Verify shipment statuses tab bar is scrollable',
+        (WidgetTester widgetTester) async {
+          await widgetTester.pumpWidget(shipmentHistoryPage);
+          await widgetTester.pumpAndSettle();
+          final tabBar =
+              (widgetTester.firstWidget(find.byType(TabBar)) as TabBar);
+          expect(tabBar.isScrollable, true);
         },
       );
     },

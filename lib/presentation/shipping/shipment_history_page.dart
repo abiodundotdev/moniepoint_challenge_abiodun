@@ -70,6 +70,7 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
         key: AppWidgetKeys.appBar,
         title: "Shipment history",
         bottom: TabBar(
+          key: AppWidgetKeys.scrollable,
           labelColor: Colors.white,
           indicatorColor: AppColors.secondary,
           indicatorWeight: 4.0,

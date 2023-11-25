@@ -70,6 +70,7 @@ class _CalculatePageState extends State<CalculatePage>
                 ),
               ),
               child: Group(
+                key: AppWidgetKeys.destinationWidget,
                 children: [
                   Text(
                     "Destination",
@@ -122,6 +123,7 @@ class _CalculatePageState extends State<CalculatePage>
                 ),
               ),
               child: Group(
+                key: AppWidgetKeys.packagingWidget,
                 children: [
                   Text(
                     "Packaging",
@@ -130,7 +132,7 @@ class _CalculatePageState extends State<CalculatePage>
                   Gap(5.0.h),
                   TitledCard(
                     title: "What are you sending?",
-                    titleColor: AppColors.grey,
+                    titleColor: AppColors.grey.shade500,
                     content: TextFormField(
                       decoration: inputDecoration(
                         hintText: "Box",
@@ -159,6 +161,7 @@ class _CalculatePageState extends State<CalculatePage>
                 ),
               ),
               child: Group(
+                key: AppWidgetKeys.categoriesWidget,
                 children: [
                   Text(
                     "Categories",
@@ -167,7 +170,7 @@ class _CalculatePageState extends State<CalculatePage>
                   Gap(5.0.h),
                   TitledCard(
                     title: "What are you sending?",
-                    titleColor: AppColors.grey,
+                    titleColor: AppColors.grey.shade500,
                     content: CategoriesView(
                       animation: _animationsList[2],
                       onChanged: (category) {},

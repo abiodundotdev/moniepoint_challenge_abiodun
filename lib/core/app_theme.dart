@@ -86,6 +86,7 @@ class AppTheme extends InheritedTheme {
           suffixIconColor: const Color(0xFFC7C7C7),
           hintStyle: theme.textTheme.bodyMedium!.copyWith(
             color: AppColors.grey.shade500,
+            fontWeight: FontWeight.w500,
           ),
           enabledBorder: textFieldBorder,
           errorBorder: textFieldBorder.copyWith(

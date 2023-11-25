@@ -35,7 +35,7 @@ class TitledCard extends StatelessWidget {
               title,
               style: titleTextStyle ??
                   theme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w500,
                     fontSize: 16.0,
                     color: titleColor ?? AppColors.adaptiveDark,
                   ),
