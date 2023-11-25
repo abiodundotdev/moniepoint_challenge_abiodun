@@ -47,25 +47,25 @@ class _DashboardPageState extends State<DashboardPage>
 
     _tabRouteViews = <_TabRouteView>[
       _TabRouteView(
-        icon: Icons.home_outlined,
+        icon: AppIcons.home,
         label: "Home",
         onTap: () {},
         // onTap: const HomePage(key: PageStorageKey("home")),
       ),
       _TabRouteView(
-          icon: Icons.calculate_outlined,
+          icon: AppIcons.calculator,
           label: "Calculate",
           onTap: () => navigator.dash.toCalculate()
           //  page: const CalculatePage(key: PageStorageKey("calculate")),
           ),
       _TabRouteView(
-          icon: Icons.history_outlined,
+          icon: AppIcons.history,
           label: "Shipment",
           onTap: () => navigator.dash.toShipmentHistory()
           //  page: const ShipmentHistoryPage(key: PageStorageKey("shippment")),
           ),
       _TabRouteView(
-          icon: Icons.person_outlined,
+          icon: AppIcons.person,
           label: "Profile",
           onTap: () => navigator.dash.toSearchPage()
           // page: const SearchPage(key: PageStorageKey("profile")),
@@ -90,11 +90,14 @@ class _DashboardPageState extends State<DashboardPage>
 
   @override
   Widget build(BuildContext context) {
+    final systemPadding = MediaQuery.of(context).padding;
     return AppScaffold(
+      animation: const AppScaffoldAnimation(bottom: true),
       padding: EdgeInsets.zero,
       body: const HomePage(),
       bottom: PreferredSize(
-        preferredSize: Size.fromHeight(kBottomNavigationBarHeight + 20.0.h),
+        preferredSize:
+            Size.fromHeight(kBottomNavigationBarHeight + systemPadding.bottom),
         child: AnimatedBuilder(
             animation: bottomAnimator,
             builder: (context, _) {

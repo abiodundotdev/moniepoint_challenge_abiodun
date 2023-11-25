@@ -74,6 +74,7 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
           indicatorWeight: 4.0,
           isScrollable: true,
           controller: _tabController,
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
           onTap: (index) {
             _addItemsToAnimatedList();
           },
@@ -117,7 +118,7 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
                 color: AppColors.adaptiveDark,
               ),
             ),
-            Gap(13.0.h),
+            Gap(10.0.h),
             AnimatedList(
               physics: const BouncingScrollPhysics(),
               initialItemCount: shipmentData.length,
@@ -129,7 +130,11 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
                     begin: const Offset(0, 1),
                     end: Offset.zero,
                   )),
-                  child: const _ShipmentDetailsCard(),
+                  child: _ShipmentDetailsCard(
+                    status: index.isEven
+                        ? ShipingStatus.inProgress
+                        : ShipingStatus.pending,
+                  ),
                 );
               },
             ),
@@ -142,7 +147,8 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
 }
 
 class _ShipmentDetailsCard extends StatelessWidget {
-  const _ShipmentDetailsCard();
+  final ShipingStatus status;
+  const _ShipmentDetailsCard({required this.status});
 
   @override
   Widget build(BuildContext context) {
@@ -159,34 +165,37 @@ class _ShipmentDetailsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            constraints: BoxConstraints(maxWidth: 130.0.w),
-            decoration: ShapeDecoration(
-              shape: const StadiumBorder(),
-              color: Colors.grey.shade200,
-            ),
-            padding: EdgeInsets.symmetric(
-              horizontal: 12.0.w,
-              vertical: 6.0.h,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.cached,
-                  color: AppColors.green.shade500,
-                ),
-                Gap(10.0.w),
-                Expanded(
-                  child: Text(
-                    "in-progress",
-                    style: textTheme.bodyMedium!.copyWith(
-                      color: AppColors.green.shade500,
-                      fontWeight: FontWeight.w600,
-                    ),
+          IntrinsicWidth(
+            child: Container(
+              decoration: ShapeDecoration(
+                shape: const StadiumBorder(),
+                color: AppColors.grey.shade100,
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: 10.0.w,
+                vertical: 4.0.h,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    status.icon,
+                    color: status.color.withOpacity(.8),
                   ),
-                )
-              ],
+                  Gap(5.0.w),
+                  Expanded(
+                    child: Text(
+                      status.fullName,
+                      maxLines: 1,
+                      style: textTheme.bodyMedium!.copyWith(
+                        fontSize: 12.0,
+                        color: status.color.withOpacity(.8),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
           Gap(5.0.h),
@@ -227,19 +236,19 @@ class _ShipmentDetailsCard extends StatelessWidget {
                 Money(5000).formatted,
                 style: textTheme.bodyMedium!.copyWith(
                   color: AppColors.primary,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               Gap(8.0.w),
               CircleAvatar(
-                radius: 3,
-                backgroundColor: AppColors.grey.shade500,
+                radius: 2.5,
+                backgroundColor: AppColors.grey.shade400,
               ),
               Gap(8.0.w),
               Text(
                 "Sep 20,2023",
                 style: textTheme.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
             ],

@@ -68,9 +68,8 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return AppScaffold(
       appBar: CustomAppBar(
-        titleSpacing: 0,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(0.0, 0, 15.0, 0).w,
+          padding: const EdgeInsets.fromLTRB(0.0, 0, 15.0, 5.0).w,
           child: Hero(
             tag: "searchHero",
             child: Material(

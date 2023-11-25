@@ -267,7 +267,7 @@ class _CategoriesViewState extends State<CategoriesView> {
   Widget build(BuildContext context) {
     final textTheme = context.theme.textTheme;
     return SizedBox(
-      height: 80.0.h,
+      height: 100.0.h,
       child: AnimatedGrid(
         key: _gridKey,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

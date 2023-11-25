@@ -17,6 +17,12 @@ class DashNavigator extends BaseNavigator {
     );
   }
 
+  void toHome() {
+    pushAndRemoveAllExceptThis(
+      const HomePage(),
+    );
+  }
+
   void toShipmentSuccessful() {
     push(const ShipmentSuccessful());
   }

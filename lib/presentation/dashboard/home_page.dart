@@ -13,25 +13,247 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with TickerProviderStateMixin, RouteAware {
+  late TabController _tabRoutesController;
+  late List<_TabRouteView> _tabRouteViews;
+  late AnimationController bottomAnimator;
+  final navigator = SC.get.navigator;
+
+  @override
+  void didPopNext() {
+    bottomAnimator.reverse();
+    _tabRoutesController.animateTo(0);
+    super.didPopNext();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    //Listen to route to know when user navigates from dashboard to another screen
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      routeObserver.subscribe(this, ModalRoute.of(context)!);
+    });
+
+    _tabRouteViews = <_TabRouteView>[
+      _TabRouteView(
+        icon: AppIcons.home,
+        label: "Home",
+        onTap: () {},
+      ),
+      _TabRouteView(
+          icon: AppIcons.calculator,
+          label: "Calculate",
+          onTap: () => navigator.dash.toCalculate()),
+      _TabRouteView(
+          icon: AppIcons.history,
+          label: "Shipment",
+          onTap: () => navigator.dash.toShipmentHistory()),
+      _TabRouteView(
+        icon: AppIcons.person,
+        label: "Profile",
+        onTap: () => navigator.dash.toSearchPage(),
+      ),
+    ];
+    _tabRoutesController = TabController(
+      length: _tabRouteViews.length,
+      vsync: this,
+    );
+
+    bottomAnimator = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final systemPadding = MediaQuery.of(context).padding;
     return AppScaffold(
-        shouldAnimate: true,
-        animationDuration: SC.get.sessionStorage.appAnimationDuration.value,
-        appBar: const HomeAppBar(),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Gap(15.0.h),
-              const _TrackingView(),
-              Gap(15.0.h),
-              const _AvailableVehiclesView(),
-              Gap(55.0.h),
-            ],
+      animation:
+          const AppScaffoldAnimation(appBar: true, body: true, bottom: true),
+      animationDuration: SC.get.sessionStorage.appAnimationDuration.value,
+      appBar: const HomeAppBar(),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Gap(15.0.h),
+            const _TrackingView(),
+            Gap(15.0.h),
+            const _AvailableVehiclesView(),
+            Gap(80.0.h),
+          ],
+        ),
+      ),
+      bottom: PreferredSize(
+        preferredSize: Size.fromHeight(
+          kBottomNavigationBarHeight + systemPadding.bottom,
+        ),
+        child: AnimatedBuilder(
+            animation: bottomAnimator,
+            builder: (context, _) {
+              return SlideTransition(
+                position: bottomAnimator.drive(Tween<Offset>(
+                  begin: Offset.zero,
+                  end: const Offset(0, 2),
+                )),
+                child: Container(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).padding.bottom),
+                  decoration: BoxDecoration(
+                    color:
+                        context.theme.bottomNavigationBarTheme.backgroundColor,
+                    boxShadow: [
+                      BoxShadow(
+                        offset: const Offset(0, -4),
+                        blurRadius: 8,
+                        color: const Color(0xFF000000).withOpacity(.05),
+                      ),
+                    ],
+                  ),
+                  child: AnimatedBuilder(
+                    animation: _tabRoutesController,
+                    builder: (context, _) {
+                      return TabBar(
+                        labelColor: AppColors.adaptivePrimary,
+                        unselectedLabelColor: AppColors.grey,
+                        controller: _tabRoutesController,
+                        indicator: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                              color: AppColors.adaptivePrimary,
+                              width: 4.0.h,
+                            ),
+                          ),
+                        ),
+                        onTap: (index) async {
+                          if (index != 0) {
+                            await Future.delayed(
+                                _tabRoutesController.animationDuration);
+                            bottomAnimator.forward();
+                            await Future.delayed(bottomAnimator.duration!);
+                            _tabRouteViews[index].onTap.call();
+                          }
+                        },
+                        tabs: List.generate(
+                          _tabRouteViews.length,
+                          (index) => Tab(
+                            text: _tabRouteViews[index].label,
+                            iconMargin: const EdgeInsets.only(bottom: 1.0),
+                            icon: Icon(
+                              _tabRouteViews[index].icon,
+                              color: _tabRoutesController.index == index
+                                  ? AppColors.adaptivePrimary
+                                  : AppColors.grey,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              );
+            }),
+      ),
+      fab: PreferredSize(
+        child: InkResponse(
+          onTap: _handleFabTap,
+          child: const CircleAvatar(
+            child: Icon(
+              Icons.bolt,
+              color: Colors.white,
+              size: 30.0,
+            ),
           ),
-        ));
+        ),
+        preferredSize: Size.square(55.0.w),
+      ),
+    );
+  }
+
+  void _handleFabTap() {
+    final textTheme = context.theme.textTheme;
+    final sessionStorage = SC.get.sessionStorage;
+    final animationDurationController = sessionStorage.appAnimationDuration;
+    final appThemeController = sessionStorage.appThemeMode;
+
+    showModalBottomSheet(
+      clipBehavior: Clip.hardEdge,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
+        ),
+      ),
+      context: context,
+      builder: (context) {
+        return Material(
+          child: Container(
+            constraints: BoxConstraints(maxHeight: 200.0.h),
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: ValueListenableBuilder(
+              valueListenable: animationDurationController,
+              builder: (context, _, __) {
+                return Column(
+                  children: [
+                    const Gap(10.0),
+                    Text(
+                      "Slide to change animation duration",
+                      style: textTheme.titleLarge!.copyWith(
+                        fontSize: 16.0,
+                        color: AppColors.adaptiveDark,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const Gap(10.0),
+                    Slider(
+                      max: 10000,
+                      min: 100,
+                      value: animationDurationController.value.inMilliseconds
+                          .toDouble(),
+                      divisions: 100,
+                      onChanged: (val) {
+                        animationDurationController.value = Duration(
+                          milliseconds: val.toInt(),
+                        );
+                      },
+                    ),
+                    const Gap(10.0),
+                    Text(
+                      "${animationDurationController.value.inMilliseconds} Milliseconds",
+                      style: textTheme.titleLarge!.copyWith(
+                        color: AppColors.adaptiveDark,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const Gap(10.0),
+                    Divider(thickness: 2, color: AppColors.dark),
+                    const Gap(10.0),
+                    ValueListenableBuilder(
+                      valueListenable: appThemeController,
+                      builder: (context, _, __) {
+                        return SwitchListTile.adaptive(
+                          title: const Text("Switch from light to dark mode"),
+                          value: appThemeController.value.isDark,
+                          onChanged: (isDarkMode) {
+                            if (!isDarkMode) {
+                              appThemeController.value = ThemeMode.light;
+                            } else {
+                              appThemeController.value = ThemeMode.dark;
+                            }
+                          },
+                        );
+                      },
+                    )
+                  ],
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -490,4 +712,11 @@ class _VehicleData {
 
   _VehicleData(
       {required this.type, required this.category, required this.image});
+}
+
+class _TabRouteView {
+  final String label;
+  final IconData icon;
+  final VoidCallback onTap;
+  _TabRouteView({required this.label, required this.icon, required this.onTap});
 }

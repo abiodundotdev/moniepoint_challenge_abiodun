@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen>
         vsync: this, duration: const Duration(milliseconds: 500))
       ..addListener(() {
         if (alignmentAnimation.isCompleted) {
-          SC.get.navigator.dash.toDashboard();
+          SC.get.navigator.dash.toHome();
         }
       });
     animationController.forward();
@@ -88,9 +88,11 @@ class _SplashScreenState extends State<SplashScreen>
                               ),
                             ),
                             SlideTransition(
-                              position: sequantialAnimtion.drive(Tween(
-                                  begin: const Offset(-2, 0),
-                                  end: Offset.zero)),
+                              position: sequantialAnimtion.drive(
+                                Tween(
+                                    begin: const Offset(-2, 0),
+                                    end: Offset.zero),
+                              ),
                               child: LottieBuilder.asset(
                                 AppLotties.van,
                                 fit: BoxFit.fitHeight,
@@ -109,7 +111,7 @@ class _SplashScreenState extends State<SplashScreen>
                     child: Visibility(
                       visible: alignmentAnimation.value > .5,
                       child: const Text(
-                        "Your movement partener ...",
+                        "Your movement partner ...",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14.0,

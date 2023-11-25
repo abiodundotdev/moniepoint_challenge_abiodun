@@ -50,7 +50,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
 
     return AppBar(
-      // titleSpacing: titleSpacing ?? NavigationToolbar.kMiddleSpacing,
+      titleSpacing: titleSpacing ?? NavigationToolbar.kMiddleSpacing,
       automaticallyImplyLeading: automaticallyImplyLeading,
       backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       leading: AppBackButton(onPressed: onPop),
@@ -85,7 +85,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight + 10.0.h);
+  Size get preferredSize =>
+      Size.fromHeight(kToolbarHeight + (bottom?.preferredSize.height ?? 0));
 }
 
 class AppCloseButton extends StatelessWidget {

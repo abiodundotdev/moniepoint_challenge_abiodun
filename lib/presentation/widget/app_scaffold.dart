@@ -17,7 +17,7 @@ class AppScaffold extends StatefulWidget {
     required this.body,
     this.backgroundColor,
     this.background,
-    this.shouldAnimate = false,
+    this.animation = const AppScaffoldAnimation(),
     this.animationDuration = const Duration(seconds: 1),
     this.appBar,
     this.padding,
@@ -29,7 +29,7 @@ class AppScaffold extends StatefulWidget {
   final Widget body;
   final Color? backgroundColor;
   final Widget? background;
-  final bool shouldAnimate;
+  final AppScaffoldAnimation animation;
   final EdgeInsets? padding;
   final PreferredSizeWidget? fab;
   final PreferredSizeWidget? bottom;
@@ -42,6 +42,7 @@ class AppScaffold extends StatefulWidget {
 class AppScaffoldState extends State<AppScaffold>
     with TickerProviderStateMixin {
   late AnimationController animationController;
+  late AnimationController bottomContoller;
 
   @override
   void initState() {
@@ -49,12 +50,24 @@ class AppScaffoldState extends State<AppScaffold>
     animationController =
         AnimationController(vsync: this, duration: widget.animationDuration);
 
+    bottomContoller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
       final bool isFullScreen =
           parentRoute is PageRoute<dynamic> && parentRoute.fullscreenDialog;
-      if (mounted && widget.shouldAnimate) {
+      if (mounted && widget.animation.shouldAnimate) {
         animationController.forward();
+        animationController.addStatusListener((status) {
+          if (status == AnimationStatus.completed) {
+            if (!widget.bottom.isNull && widget.animation.bottom) {
+              bottomContoller.forward();
+            }
+          }
+        });
       }
     });
   }
@@ -62,6 +75,7 @@ class AppScaffoldState extends State<AppScaffold>
   @override
   void dispose() {
     animationController.dispose();
+    bottomContoller.dispose();
     super.dispose();
   }
 
@@ -94,7 +108,7 @@ class AppScaffoldState extends State<AppScaffold>
                     child: SlideTransition(
                       position: animationController.drive(
                         Tween(
-                          begin: widget.shouldAnimate
+                          begin: widget.animation.appBar
                               ? const Offset(0, -1)
                               : Offset.zero,
                           end: Offset.zero,
@@ -117,7 +131,7 @@ class AppScaffoldState extends State<AppScaffold>
                   child: SlideTransition(
                     position: animationController.drive(
                       Tween(
-                        begin: widget.shouldAnimate
+                        begin: widget.animation.body
                             ? const Offset(0, 1)
                             : Offset.zero,
                         end: Offset.zero,
@@ -125,11 +139,15 @@ class AppScaffoldState extends State<AppScaffold>
                     ),
                     child: MediaQuery(
                       data: queryData.removePadding(
-                          removeTop: widget.appBar != null),
+                          removeTop: widget.appBar != null, removeBottom: true),
                       child: Padding(
                         padding: widget.padding ??
-                            EdgeInsets.fromLTRB(
-                                15.0, 0, 15.0, bodyBottomPadding),
+                            const EdgeInsets.fromLTRB(
+                              15.0,
+                              0,
+                              15.0,
+                              0,
+                            ),
                         child: widget.body,
                       ),
                     ),
@@ -138,7 +156,17 @@ class AppScaffoldState extends State<AppScaffold>
                 if (!widget.bottom.isNull)
                   LayoutId(
                     id: _LayoutSlot.bottom,
-                    child: widget.bottom ?? const SizedBox(),
+                    child: SlideTransition(
+                      position: bottomContoller.drive(
+                        Tween(
+                          begin: widget.animation.bottom
+                              ? const Offset(0, 8)
+                              : Offset.zero,
+                          end: Offset.zero,
+                        ),
+                      ),
+                      child: widget.bottom ?? const SizedBox(),
+                    ),
                   ),
                 if (!widget.fab.isNull)
                   LayoutId(
@@ -221,4 +249,16 @@ class _AppScaffoldDelegate extends MultiChildLayoutDelegate {
   @override
   bool shouldRelayout(_AppScaffoldDelegate oldDelegate) =>
       viewInsets != oldDelegate.viewInsets;
+}
+
+class AppScaffoldAnimation {
+  final bool appBar;
+  final bool body;
+  final bool bottom;
+  const AppScaffoldAnimation({
+    this.appBar = false,
+    this.body = false,
+    this.bottom = false,
+  });
+  bool get shouldAnimate => appBar || body || bottom;
 }
