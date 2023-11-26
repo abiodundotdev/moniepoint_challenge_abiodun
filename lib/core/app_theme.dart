@@ -116,7 +116,6 @@ class AppTheme extends InheritedTheme {
       borderSide: BorderSide(color: AppColors.grey),
       borderRadius: BorderRadius.circular(5.0),
     );
-
     return ThemeData(
       useMaterial3: false,
       scaffoldBackgroundColor: AppColors.dark,
@@ -190,7 +189,7 @@ class AppTheme extends InheritedTheme {
           vertical: 10.0.h,
           horizontal: 12.0.h,
         ),
-        fillColor: Colors.white,
+        fillColor: AppColors.dark.shade900,
         filled: true,
       ),
       textSelectionTheme: theme.textSelectionTheme.copyWith(

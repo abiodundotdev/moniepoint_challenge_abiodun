@@ -65,6 +65,11 @@ class _CalculatePageState extends State<CalculatePage>
       color: AppColors.adaptiveDark,
       fontSize: 17.0,
     );
+    final border = context.theme.inputDecorationTheme.border!.copyWith(
+      borderSide: BorderSide(
+        color: AppColors.adaptiveDark3,
+      ),
+    );
     return AppScaffold(
       appBar: CustomAppBar(
         title: "Calculate",
@@ -166,7 +171,10 @@ class _CalculatePageState extends State<CalculatePage>
                             fontWeight: FontWeight.w700,
                             color: AppColors.dark,
                           ),
-                          fillColor: Colors.white,
+                          fillColor: AppColors.adaptiveDark2,
+                          border: border,
+                          focusedBorder: border,
+                          enabledBorder: border,
                           suffixIcon: const Icon(
                             Icons.keyboard_arrow_down,
                           ),

@@ -87,6 +87,14 @@ class AppColors {
     return appTheme.value.isDark ? AppColors.black : AppColors.white;
   }
 
+  static MaterialColor get adaptiveDark2 {
+    return appTheme.value.isDark ? AppColors.dark : AppColors.white;
+  }
+
+  static MaterialColor get adaptiveDark3 {
+    return appTheme.value.isDark ? AppColors.white : AppColors.white;
+  }
+
   static MaterialColor get adaptivePrimary {
     return appTheme.value.isDark ? AppColors.white : AppColors.primary;
   }
