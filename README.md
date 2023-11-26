@@ -15,21 +15,18 @@ A few resources to get you started if this is your first Flutter project:
 ```
 git clone https://github.com/abiodundotdev/moniepoint_challenge_abiodun.git
 flutter pub get
+<<<<<<< HEAD
 flutter packages pub run build_runner build --delete-conflicting-outputs
+=======
+>>>>>>> parent of 171d430 (Update readme)
 flutter run
 ```
+
 
 > To run test:
 ```
 flutter test
 ```
-
-
-## Core Packages used
-- Freezed - For  genetating data class
-- Flutter - Bloc For state management
-- Bloc test - To test the bloc behaviour
-
 
 
 
