@@ -57,7 +57,7 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
         Duration(milliseconds: duration.inMilliseconds ~/ 4),
       );
     }
-    //To update count in tab bar
+    //To update count in tab bar so item count can update
     setState(() {});
   }
 
