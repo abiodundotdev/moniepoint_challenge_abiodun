@@ -2,23 +2,23 @@
     "data": [
       {
         "id": 1,
-        "tracking_id": "NEJ782737827832387",
+        "tracking_id": "NEF782737827832387",
         "delivery_date": "2023-06-30T00:00:00.000Z",
         "address": "Atlanta",
         "status": "in-progress",
-        "amount": 3400
+        "amount": 500
       },
       {
         "id": 1,
-        "tracking_id": "NEJ8838283728938923",
+        "tracking_id": "NEF8838283728938923",
         "delivery_date": "2023-06-30T00:00:00.000Z",
         "address": "Atlanta",
         "status": "loading",
-        "amount": 8000
+        "amount": 700
       },
       {
         "id": 1,
-        "tracking_id": "NEJ2384627382323",
+        "tracking_id": "NEF2384627382323",
         "delivery_date": "2023-06-30T00:00:00.000Z",
         "address": "Atlanta",
         "status": "pending",
@@ -26,7 +26,7 @@
       },
       {
         "id": 1,
-        "tracking_id": "NEJ723946723823",
+        "tracking_id": "NEF723946723823",
         "delivery_date": "2023-06-30T00:00:00.000Z",
         "address": "Atlanta",
         "status": "in-progress",
@@ -34,7 +34,7 @@
       },
       {
         "id": 1,
-        "tracking_id": "NEJ3872429843467",
+        "tracking_id": "NEF3872429843467",
         "delivery_date": "2023-06-30T00:00:00.000Z",
         "address": "Atlanta",
         "status": "pending",

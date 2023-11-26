@@ -16,10 +16,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.systemOverlayStyle = SystemUiOverlayStyle.dark,
     this.leading,
     this.trailing,
+    this.centerTitle = true,
     this.onPop,
     this.scrollUnderElevation,
     this.bottom,
     this.titleTextStyle,
+    this.leadingWidth,
   })  : assert((() => !(title != null && child != null))(),
             'Only either title or child can be used'),
         super(key: key);
@@ -28,9 +30,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool automaticallyImplyLeading;
   final String? title;
   final Widget? child;
+  final bool centerTitle;
   final SystemUiOverlayStyle systemOverlayStyle;
   final Widget? leading;
   final Widget? trailing;
+  final double? leadingWidth;
   final VoidCallback? onPop;
   final TextStyle? titleTextStyle;
   final PreferredSizeWidget? bottom;
@@ -52,9 +56,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       titleSpacing: titleSpacing ?? NavigationToolbar.kMiddleSpacing,
       automaticallyImplyLeading: automaticallyImplyLeading,
+      leadingWidth: leadingWidth,
       backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       leading: AppBackButton(onPressed: onPop),
-      centerTitle: true,
+      centerTitle: centerTitle,
       systemOverlayStyle: systemOverlayStyle,
       title: _buildTitle(context),
       elevation: 0,

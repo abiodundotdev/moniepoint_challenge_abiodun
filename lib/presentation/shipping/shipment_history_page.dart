@@ -57,6 +57,8 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
         Duration(milliseconds: duration.inMilliseconds ~/ 4),
       );
     }
+    //To update count in tab bar
+    setState(() {});
   }
 
   void _removeItemsFromAnimatedList(AnimatedListState ls) {
@@ -93,15 +95,15 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
           controller: _tabController,
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           onTap: (index) {
-            // if (index == 0) {
-            //   _addItemsToAnimatedList(shipmentData);
-            //   return;
-            // }
-            // final status = _deriveStatus(index);
-            // final filtered = shipmentData
-            //     .where((shipment) => shipment.statusToEnum == status)
-            //     .toList();
-            // _addItemsToAnimatedList(filtered);
+            if (index == 0) {
+              _addItemsToAnimatedList(shipmentData);
+              return;
+            }
+            final status = _deriveStatus(index);
+            final filtered = shipmentData
+                .where((shipment) => shipment.statusToEnum == status)
+                .toList();
+            _addItemsToAnimatedList(filtered);
           },
           tabs: List.generate(
             shipmentStatuses.length,
@@ -115,7 +117,7 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
                       Text(shipmentStatuses[index].description),
                       Gap(8.0.w),
                       Container(
-                        child: Text("${index + 3}"),
+                        child: Text("${_deriveCount(index)}"),
                         padding: const EdgeInsetsDirectional.symmetric(
                             vertical: 3.0, horizontal: 10.0),
                         decoration: ShapeDecoration(
@@ -183,6 +185,26 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
         return ShipingStatus.pending;
       default:
         return ShipingStatus.inProgress;
+    }
+  }
+
+  int _deriveCount(int index) {
+    switch (index) {
+      case 2:
+        return shipmentData
+            .where(
+                (element) => element.statusToEnum == ShipingStatus.inProgress)
+            .length;
+      case 1:
+        return shipmentData
+            .where((element) => element.statusToEnum == ShipingStatus.loading)
+            .length;
+      case 3:
+        return shipmentData
+            .where((element) => element.statusToEnum == ShipingStatus.pending)
+            .length;
+      default:
+        return shipmentData.length;
     }
   }
 }
@@ -287,7 +309,7 @@ class _ShipmentDetailsCard extends StatelessWidget {
               ),
               Gap(8.0.w),
               Text(
-                DateFormat.yMd().format(
+                DateFormat.yMMMd().format(
                   shipment.deliveryDate ?? DateTime.now(),
                 ),
                 style: textTheme.bodyMedium!.copyWith(

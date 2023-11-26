@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen>
       TweenSequenceItem(tween: Tween(begin: 0.8, end: 1), weight: 20),
     ]).animate(animationController);
     alignmentAnimation = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 100))
+        vsync: this, duration: const Duration(milliseconds: 300))
       ..addListener(() {
         if (alignmentAnimation.isCompleted) {
           SC.get.navigator.dash.toHome();

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:moniepoint/data/data.dart';
 import 'package:moniepoint/domain/domain.dart';
 import 'package:moniepoint/presentation/presentation.dart';
 import 'package:moniepoint/presentation/shipping/shipments_item_bloc/shipments_item_bloc.dart';
@@ -30,7 +31,12 @@ mixin ShippingUsecases {
       final result = await repository.shipping.getShipments();
       emit(ShipmentsCompletedState(result));
     } catch (error) {
-      emit(const ShipmentsErrorState("Error occur"));
+      //FAKE DATA reponse incase of you are not connected to the internet
+      emit(
+        ShipmentsCompletedState(
+          await FakeShippingRepository().getShipments(),
+        ),
+      );
     }
   }
 
@@ -41,7 +47,11 @@ mixin ShippingUsecases {
       final result = await repository.shipping.getShipmentItems();
       emit(ShipmentsItemCompleted(result));
     } catch (e) {
-      emit(const ShipmentsItemErrorState("Error occur"));
+      emit(
+        ShipmentsItemCompleted(
+          await FakeShippingRepository().getShipmentItems(),
+        ),
+      );
     }
   }
 }
