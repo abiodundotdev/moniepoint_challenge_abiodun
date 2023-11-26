@@ -7,3 +7,4 @@ export 'app_images.dart';
 export 'app_lotties.dart';
 export 'app_strings.dart';
 export 'app_widget_keys.dart';
+export 'endpoint.dart';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:moniepoint/app_state.dart';
 import 'package:moniepoint/core/core.dart';
 import 'package:moniepoint/presentation/presentation.dart';
 import 'package:moniepoint/service_container.dart';
@@ -30,14 +31,16 @@ class _AppState extends State<App> {
                 return ValueListenableBuilder(
                   valueListenable: SC.get.sessionStorage.appThemeMode,
                   builder: (context, themeMode, __) {
-                    return MaterialApp(
-                      debugShowCheckedModeBanner: false,
-                      themeMode: themeMode,
-                      navigatorObservers: [routeObserver],
-                      navigatorKey: rootNavigatorKey,
-                      theme: AppTheme.of(context).light(context.theme),
-                      darkTheme: AppTheme.of(context).dark(context.theme),
-                      home: const SplashScreen(),
+                    return AppStateProvider(
+                      child: MaterialApp(
+                        debugShowCheckedModeBanner: false,
+                        themeMode: themeMode,
+                        navigatorObservers: [routeObserver],
+                        navigatorKey: rootNavigatorKey,
+                        theme: AppTheme.of(context).light(context.theme),
+                        darkTheme: AppTheme.of(context).dark(context.theme),
+                        home: const SplashScreen(),
+                      ),
                     );
                   },
                 );

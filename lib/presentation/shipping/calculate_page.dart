@@ -19,9 +19,11 @@ class _CalculatePageState extends State<CalculatePage>
     with TickerProviderStateMixin, ShippingUsecases {
   late AnimationController _animationController;
   late List<Animation<double>> _animationsList;
+
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
   ShipmentRequestData requestData = ShipmentRequestData();
+
   final duration = SC.get.sessionStorage.appAnimationDuration.value;
 
   @override
@@ -31,7 +33,7 @@ class _CalculatePageState extends State<CalculatePage>
     _animationController = AnimationController(
         vsync: this,
         duration: Duration(
-          milliseconds: duration.inMilliseconds + 200,
+          milliseconds: duration.inMilliseconds + 100,
         ));
     _animationsList = List.generate(
       animationLength,
@@ -365,6 +367,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                     Expanded(
                       child: Text(
                         categories[index],
+                        maxLines: 1,
                         textAlign: TextAlign.center,
                         style: textTheme.bodyMedium!.copyWith(
                           color: isSelected ? AppColors.white : AppColors.dark,

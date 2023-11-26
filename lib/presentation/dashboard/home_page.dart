@@ -25,9 +25,14 @@ class _HomePageState extends State<HomePage>
   @override
   void didPopNext() async {
     bottomAnimationController.reverse();
-    await Future.delayed(const Duration(milliseconds: 400));
-    _tabRoutesController.animateTo(0,
-        duration: Duration(milliseconds: _tabRoutesController.index * 250));
+    await Future.delayed(animationDuration);
+    _tabRoutesController.animateTo(
+      0,
+      duration: Duration(
+        milliseconds: _tabRoutesController.index *
+            (animationDuration.inMilliseconds - 100),
+      ),
+    );
     super.didPopNext();
   }
 
@@ -66,7 +71,7 @@ class _HomePageState extends State<HomePage>
 
     bottomAnimationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: Duration(milliseconds: animationDuration.inMilliseconds),
     );
 
     avController = AnimationController(

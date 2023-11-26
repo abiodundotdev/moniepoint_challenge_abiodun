@@ -46,10 +46,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         animatedShipmentData.length - 1,
       );
       await Future.delayed(
-        animationDuration.inMilliseconds > 100
-            ? const Duration(milliseconds: 100)
-            : animationDuration,
-      );
+          Duration(milliseconds: animationDuration.inMilliseconds ~/ 4));
     }
   }
 

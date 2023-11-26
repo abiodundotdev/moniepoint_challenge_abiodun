@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:moniepoint/core/core.dart';
 import 'package:moniepoint/presentation/presentation.dart';
+import 'package:moniepoint/service_container.dart';
 
 class ShipmentHistoryPage extends StatefulWidget {
   const ShipmentHistoryPage({super.key});
@@ -19,6 +20,8 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
       GlobalKey<AnimatedListState>();
 
   final List<String> shipmentData = [];
+
+  final duration = SC.get.sessionStorage.appAnimationDuration.value;
 
   @override
   void initState() {
@@ -48,7 +51,9 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
       ls.insertItem(
         shipmentData.length - 1,
       );
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future.delayed(
+        Duration(milliseconds: duration.inMilliseconds ~/ 4),
+      );
     }
   }
 
@@ -246,7 +251,7 @@ class _ShipmentDetailsCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                Money(5000).formatted,
+                "${Money(5000).formatted} USD",
                 style: textTheme.bodyMedium!.copyWith(
                   color: AppColors.primary,
                   fontWeight: FontWeight.w600,

@@ -24,6 +24,10 @@ class SC {
       ..add<AppHttpClient>(
         DioHttpClient(Dio()),
       )
+      //The environment should be gotten from CLI
+      ..add<Repository>(
+        await RepositoryFactory.make(Env.mock, Dio()),
+      )
       ..add<AppNavigator>(AppNavigator(rootNavigatorKey));
   }
 
@@ -50,6 +54,7 @@ extension XSC on SC {
   SessionStorage get sessionStorage => _injector.get<SessionStorage>();
   AppHttpClient get httpClient => _injector.get<AppHttpClient>();
   AppNavigator get navigator => _injector.get<AppNavigator>();
+  Repository get repository => _injector.get<Repository>();
 }
 
 class SessionStorage {
