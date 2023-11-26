@@ -105,21 +105,6 @@ void main() {
         },
       );
 
-      // testWidgets(
-      //   'Verify navigates to shipment page on shipment button tap',
-      //   (WidgetTester widgetTester) async {
-      //     await widgetTester.pumpWidget(homePage);
-      //     await widgetTester.pump(const Duration(seconds: 4));
-      //     final button = find.text("Shipment");
-      //     expect(button, findsOneWidget);
-      //     //Tap the button since it is found
-      //     await widgetTester.tap(button);
-      //     //Wait for some seconds incase of delayed response
-      //     await widgetTester.pumpAndSettle(const Duration(seconds: 2));
-      //     expect(find.byType(ShipmentHistoryPage), findsOneWidget);
-      //   },
-      // );
-
       testWidgets(
         'Verify navigates to profile page on profile button tap',
         (WidgetTester widgetTester) async {

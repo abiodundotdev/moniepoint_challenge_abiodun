@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage>
 
     bottomAnimationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: animationDuration.inMilliseconds),
+      duration: Duration(milliseconds: animationDuration.inMilliseconds - 100),
     );
 
     avController = AnimationController(

@@ -59,7 +59,7 @@ extension XSC on SC {
 class SessionStorage {
   ValueNotifier<ThemeMode> appThemeMode = ValueNotifier(ThemeMode.light);
   ValueNotifier<Duration> appAnimationDuration = ValueNotifier(
-    const Duration(milliseconds: 400),
+    const Duration(milliseconds: 500),
   );
 }
 

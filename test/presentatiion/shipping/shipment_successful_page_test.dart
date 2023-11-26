@@ -27,16 +27,6 @@ void main() {
           );
         },
       );
-
-      // testWidgets(
-      //   'Verify has Total estimate amout widget and amount widget)',
-      //   (WidgetTester widgetTester) async {
-      //     await widgetTester.pumpWidget(shipmentSuccessfulPage);
-      //     await widgetTester.pump(const Duration(seconds: 4));
-      //     expect(find.text("Back"), findsOneWidget);
-      //     expect(find.text("USD"), findsOneWidget);
-      //   },
-      // );
     },
   );
 }
