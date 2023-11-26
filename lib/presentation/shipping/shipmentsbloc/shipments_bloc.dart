@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:moniepoint/domain/domain.dart';
-import 'package:moniepoint/domain/entities/aliases/models.dart';
 
 part 'shipments_state.dart';
 part 'shipments_event.dart';
@@ -14,7 +13,7 @@ class ShipmentsStateProvider extends Bloc<ShipmentsEvent, ShipmentsState>
     on<FetchShipmentsEvent>(fetchShipment);
   }
 
-  static fetch(BuildContext context) {
+  static Future<void> fetch(BuildContext context) async {
     BlocProvider.of<ShipmentsStateProvider>(context, listen: false).add(
       const FetchShipmentsEvent(),
     );

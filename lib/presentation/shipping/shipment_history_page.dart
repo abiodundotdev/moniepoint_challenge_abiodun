@@ -34,7 +34,7 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
         TabController(length: ShipmentStatus.values.length, vsync: this);
     _scrollController = ScrollController();
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       final state = BlocProvider.of<ShipmentsStateProvider>(context).state;
       if (state is ShipmentsCompletedState) {
         final data = state.data;

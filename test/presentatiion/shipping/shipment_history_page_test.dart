@@ -28,15 +28,21 @@ void main() {
         },
       );
 
-      // testWidgets(
-      //   'Verify has shipments title',
-      //   (WidgetTester widgetTester) async {
-      //     await widgetTester.pumpWidget(shipmentHistoryPage);
-      //     await widgetTester.pump();
-      //     final shipments = find.text("Shipments");
-      //     expect(shipments, findsAtLeastNWidgets(1));
-      //   },
-      // );
+      testWidgets(
+        'Verify has shipments title',
+        (WidgetTester widgetTester) async {
+          await widgetTester.pumpWidget(shipmentHistoryPage);
+          final BuildContext context = widgetTester.element(
+            find.byType(ShipmentHistoryPage),
+          );
+          TestHelper.populateState(context);
+          await widgetTester.pump();
+          final shipments = find.text("Shipments");
+          expect(shipments, findsAtLeastNWidgets(1));
+        },
+      );
+
+      //TODO: Revisit and modify to make test pass
 
       // testWidgets(
       //   'Verify has at least one in-progress and pending shipment',
