@@ -55,13 +55,12 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
 
   void _removeItemsFromAnimatedList() {
     final ls = animationListKey.currentState!;
-    for (var i = 0; i < animatedShipmentData.length; i++) {
+    for (int i = animatedShipmentData.length - 1; i >= 0; i--) {
       animatedShipmentData.removeAt(i);
       ls.removeItem(i, (context, animation) {
         return const SizedBox();
       });
     }
-    return;
   }
 
   @override
@@ -69,7 +68,7 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
     return AppScaffold(
       appBar: CustomAppBar(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(0.0, 0, 15.0, 5.0).w,
+          padding: const EdgeInsets.fromLTRB(0.0, 0, .0, 8.0).w,
           child: Hero(
             tag: "searchHero",
             child: Material(

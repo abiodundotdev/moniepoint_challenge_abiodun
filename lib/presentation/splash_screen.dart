@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
-import 'package:moniepoint/core/constants/app_lotties.dart';
 import 'package:moniepoint/core/core.dart';
 import 'package:moniepoint/service_container.dart';
 
@@ -30,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen>
       TweenSequenceItem(tween: Tween(begin: 0.8, end: 1), weight: 20),
     ]).animate(animationController);
     alignmentAnimation = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500))
+        vsync: this, duration: const Duration(milliseconds: 100))
       ..addListener(() {
         if (alignmentAnimation.isCompleted) {
           SC.get.navigator.dash.toHome();
@@ -71,8 +70,6 @@ class _SplashScreenState extends State<SplashScreen>
                               opacity: animationController.isCompleted ? 1 : 0,
                               curve: Curves.easeIn,
                               onEnd: () async {
-                                await Future.delayed(
-                                    const Duration(seconds: 2));
                                 alignmentAnimation.forward();
                               },
                               child: Text(
@@ -82,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen>
                                   fontFamily: AppFonts.kanit,
                                   color: AppColors.primary,
                                   fontSize: 35.0,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.w800,
                                   fontStyle: FontStyle.italic,
                                 ),
                               ),

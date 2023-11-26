@@ -17,20 +17,23 @@ class _HomePageState extends State<HomePage>
     with TickerProviderStateMixin, RouteAware {
   late TabController _tabRoutesController;
   late List<_TabRouteView> _tabRouteViews;
-  late AnimationController bottomAnimator;
+  late AnimationController bottomAnimationController;
+  late AnimationController avController;
   final navigator = SC.get.navigator;
+  final animationDuration = SC.get.sessionStorage.appAnimationDuration.value;
 
   @override
-  void didPopNext() {
-    bottomAnimator.reverse();
-    _tabRoutesController.animateTo(0);
+  void didPopNext() async {
+    bottomAnimationController.reverse();
+    await Future.delayed(const Duration(milliseconds: 400));
+    _tabRoutesController.animateTo(0,
+        duration: Duration(milliseconds: _tabRoutesController.index * 250));
     super.didPopNext();
   }
 
   @override
   void initState() {
     super.initState();
-    //Listen to route to know when user navigates from dashboard to another screen
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       routeObserver.subscribe(this, ModalRoute.of(context)!);
     });
@@ -55,14 +58,20 @@ class _HomePageState extends State<HomePage>
         onTap: () => navigator.dash.toSearchPage(),
       ),
     ];
+
     _tabRoutesController = TabController(
       length: _tabRouteViews.length,
       vsync: this,
     );
 
-    bottomAnimator = AnimationController(
+    bottomAnimationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 300),
+    );
+
+    avController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: animationDuration.inMilliseconds ~/ 4),
     );
   }
 
@@ -73,6 +82,9 @@ class _HomePageState extends State<HomePage>
       animation:
           const AppScaffoldAnimation(appBar: true, body: true, bottom: true),
       animationDuration: SC.get.sessionStorage.appAnimationDuration.value,
+      onAnimationEnd: (_) {
+        avController.forward();
+      },
       appBar: HomeAppBar(
         key: AppWidgetKeys.appBar,
       ),
@@ -86,6 +98,7 @@ class _HomePageState extends State<HomePage>
             ),
             Gap(15.0.h),
             _AvailableVehiclesView(
+              animationController: avController,
               key: AppWidgetKeys.homeAvailableVehiclesWidget,
             ),
             Gap(80.0.h),
@@ -98,12 +111,12 @@ class _HomePageState extends State<HomePage>
           kBottomNavigationBarHeight + systemPadding.bottom,
         ),
         child: AnimatedBuilder(
-            animation: bottomAnimator,
+            animation: bottomAnimationController,
             builder: (context, _) {
               return SlideTransition(
-                position: bottomAnimator.drive(Tween<Offset>(
+                position: bottomAnimationController.drive(Tween<Offset>(
                   begin: Offset.zero,
-                  end: const Offset(0, 2),
+                  end: const Offset(0, 1),
                 )),
                 child: Container(
                   padding: EdgeInsets.only(
@@ -138,8 +151,9 @@ class _HomePageState extends State<HomePage>
                           if (index != 0) {
                             await Future.delayed(
                                 _tabRoutesController.animationDuration);
-                            bottomAnimator.forward();
-                            await Future.delayed(bottomAnimator.duration!);
+                            bottomAnimationController.forward();
+                            await Future.delayed(
+                                bottomAnimationController.duration!);
                             _tabRouteViews[index].onTap.call();
                           }
                         },
@@ -302,7 +316,7 @@ class _TrackingView extends StatelessWidget {
                         "NEJ200002172772781872",
                         style: textTheme.bodyMedium!.copyWith(
                           color: AppColors.black,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ],
@@ -429,7 +443,9 @@ class _TrackingView extends StatelessWidget {
 }
 
 class _AvailableVehiclesView extends StatefulWidget {
-  const _AvailableVehiclesView({super.key});
+  final AnimationController animationController;
+
+  const _AvailableVehiclesView({super.key, required this.animationController});
 
   @override
   State<_AvailableVehiclesView> createState() => __AvailableVehiclesViewState();
@@ -475,6 +491,8 @@ class __AvailableVehiclesViewState extends State<_AvailableVehiclesView>
         image: AppImages.plane,
       )
     ];
+    const endOffset = Offset(1, 0);
+
     return TitledCard(
       title: "Available vehicles",
       content: SingleChildScrollView(
@@ -496,33 +514,41 @@ class __AvailableVehiclesViewState extends State<_AvailableVehiclesView>
                 ),
                 child: Stack(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            vehicles[index].type,
-                            style: textTheme.bodyLarge!.copyWith(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16.0,
-                              color: AppColors.dark,
+                    SlideTransition(
+                      position: widget.animationController.drive(
+                        Tween(
+                          begin: endOffset,
+                          end: Offset.zero,
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              vehicles[index].type,
+                              style: textTheme.bodyLarge!.copyWith(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16.0,
+                                color: AppColors.dark,
+                              ),
                             ),
-                          ),
-                          Gap(2.0.h),
-                          Text(
-                            vehicles[index].category,
-                            style: textTheme.bodySmall!.copyWith(
-                              color: AppColors.grey,
+                            Gap(2.0.h),
+                            Text(
+                              vehicles[index].category,
+                              style: textTheme.bodySmall!.copyWith(
+                                color: AppColors.grey,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     SlideTransition(
-                      position: controller.drive(
+                      position: widget.animationController.drive(
                         Tween(
-                          begin: const Offset(7, 0),
+                          begin: endOffset,
                           end: Offset.zero,
                         ),
                       ),
@@ -657,6 +683,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                       backgroundColor: Colors.white,
                       child: Icon(
                         AppIcons.notification,
+                        color: AppColors.dark,
                         size: 25.0.sp,
                       ),
                     )

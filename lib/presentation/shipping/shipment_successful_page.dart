@@ -121,7 +121,7 @@ class _ShipmentSuccessfulState extends State<ShipmentSuccessful>
             ),
             child: ContainedButton(
               text: "Back to home",
-              onPressed: () => SC.get.navigator.dash.toDashboard(),
+              onPressed: () => SC.get.navigator.dash.toHome(),
             ),
           )
         ],

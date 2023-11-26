@@ -5,11 +5,11 @@ import 'package:moniepoint/presentation/dashboard/search_page.dart';
 import '../../helper.dart';
 
 void main() {
-  late Widget homePage;
+  late Widget searchPage;
 
   setUp(() {
     TestHelper.setUpServiceContainer();
-    homePage = buildTestableMaterialApp(const SearchPage());
+    searchPage = buildTestableMaterialApp(const SearchPage());
   });
 
   group(
@@ -18,7 +18,7 @@ void main() {
       testWidgets(
         'Verify has search form field',
         (WidgetTester widgetTester) async {
-          await widgetTester.pumpWidget(homePage);
+          await widgetTester.pumpWidget(searchPage);
           await widgetTester.pump(const Duration(seconds: 2));
           expect(
             find.byType(TextFormField),

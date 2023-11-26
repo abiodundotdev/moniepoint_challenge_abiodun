@@ -14,6 +14,7 @@ class ShipmentHistoryPage extends StatefulWidget {
 class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
     with TickerProviderStateMixin {
   late TabController _tabController;
+  late ScrollController _scrollController;
   final GlobalKey<AnimatedListState> animationListKey =
       GlobalKey<AnimatedListState>();
 
@@ -27,16 +28,25 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _addItemsToAnimatedList();
     });
+    _scrollController = ScrollController()..addListener(_addItemOnScroll);
+  }
+
+  void _addItemOnScroll() async {
+    final ls = animationListKey.currentState!;
+    await Future.delayed(const Duration(seconds: 1));
+    shipmentData.add("3");
+    ls.insertItem(
+      shipmentData.length - 1,
+    );
   }
 
   void _addItemsToAnimatedList() async {
     final ls = animationListKey.currentState!;
     _removeItemsFromAnimatedList();
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 4; i++) {
       shipmentData.add("$i");
       ls.insertItem(
         shipmentData.length - 1,
-        duration: const Duration(milliseconds: 100),
       );
       await Future.delayed(const Duration(milliseconds: 100));
     }
@@ -44,17 +54,17 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
 
   void _removeItemsFromAnimatedList() {
     final ls = animationListKey.currentState!;
-    for (var i = 0; i < shipmentData.length; i++) {
+    for (int i = shipmentData.length - 1; i >= 0; i--) {
       shipmentData.removeAt(i);
       ls.removeItem(i, (context, animation) {
         return const SizedBox();
       });
     }
-    return;
   }
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _tabController.dispose();
     super.dispose();
   }
@@ -63,7 +73,6 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
   Widget build(BuildContext context) {
     final textTheme = context.theme.textTheme;
     const shipmentStatuses = ShipmentStatus.values;
-
     return AppScaffold(
       appBar: CustomAppBar(
         automaticallyImplyLeading: true,
@@ -83,32 +92,34 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
           tabs: List.generate(
             shipmentStatuses.length,
             (index) => AnimatedBuilder(
-                animation: _tabController,
-                builder: (context, _) {
-                  bool isActive = index == _tabController.index;
-                  return Tab(
-                    child: Row(
-                      children: [
-                        Text(shipmentStatuses[index].description),
-                        Gap(8.0.w),
-                        Container(
-                          child: Text("${index + 3}"),
-                          padding: const EdgeInsetsDirectional.symmetric(
-                              vertical: 3.0, horizontal: 10.0),
-                          decoration: ShapeDecoration(
-                            color:
-                                isActive ? AppColors.secondary : Colors.white24,
-                            shape: const StadiumBorder(),
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-                }),
+              animation: _tabController,
+              builder: (context, _) {
+                bool isActive = index == _tabController.index;
+                return Tab(
+                  child: Row(
+                    children: [
+                      Text(shipmentStatuses[index].description),
+                      Gap(8.0.w),
+                      Container(
+                        child: Text("${index + 3}"),
+                        padding: const EdgeInsetsDirectional.symmetric(
+                            vertical: 3.0, horizontal: 10.0),
+                        decoration: ShapeDecoration(
+                          color:
+                              isActive ? AppColors.secondary : Colors.white24,
+                          shape: const StadiumBorder(),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

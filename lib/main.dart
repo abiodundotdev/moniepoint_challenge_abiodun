@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:moniepoint/core/core.dart';
-import 'package:moniepoint/presentation/splash_screen.dart';
+import 'package:moniepoint/presentation/presentation.dart';
 import 'package:moniepoint/service_container.dart';
 
 void main() async {
@@ -21,26 +21,28 @@ class _AppState extends State<App> {
     return ValueListenableBuilder(
       valueListenable: SC.get.sessionStorage.appAnimationDuration,
       builder: (context, _, __) {
-        return AppTheme(
-          child: ScreenUtilInit(
-            designSize: const Size(360, 690),
-            minTextAdapt: true,
-            builder: (context, child) {
-              return ValueListenableBuilder(
-                valueListenable: SC.get.sessionStorage.appThemeMode,
-                builder: (context, themeMode, __) {
-                  return MaterialApp(
-                    debugShowCheckedModeBanner: false,
-                    themeMode: themeMode,
-                    navigatorObservers: [routeObserver],
-                    navigatorKey: rootNavigatorKey,
-                    theme: AppTheme.of(context).light(context.theme),
-                    darkTheme: AppTheme.of(context).dark(context.theme),
-                    home: const SplashScreen(),
-                  );
-                },
-              );
-            },
+        return AppPreloader(
+          child: AppTheme(
+            child: ScreenUtilInit(
+              designSize: const Size(360, 690),
+              minTextAdapt: true,
+              builder: (context, child) {
+                return ValueListenableBuilder(
+                  valueListenable: SC.get.sessionStorage.appThemeMode,
+                  builder: (context, themeMode, __) {
+                    return MaterialApp(
+                      debugShowCheckedModeBanner: false,
+                      themeMode: themeMode,
+                      navigatorObservers: [routeObserver],
+                      navigatorKey: rootNavigatorKey,
+                      theme: AppTheme.of(context).light(context.theme),
+                      darkTheme: AppTheme.of(context).dark(context.theme),
+                      home: const SplashScreen(),
+                    );
+                  },
+                );
+              },
+            ),
           ),
         );
       },
