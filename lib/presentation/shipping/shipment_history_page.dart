@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 import 'package:moniepoint/core/core.dart';
+import 'package:moniepoint/domain/domain.dart';
 import 'package:moniepoint/presentation/presentation.dart';
+import 'package:moniepoint/presentation/shipping/shipmentsbloc/shipments_bloc.dart';
 import 'package:moniepoint/service_container.dart';
 
 class ShipmentHistoryPage extends StatefulWidget {
@@ -19,7 +23,7 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
   final GlobalKey<AnimatedListState> animationListKey =
       GlobalKey<AnimatedListState>();
 
-  final List<String> shipmentData = [];
+  List<ShipmentModel> shipmentData = [];
 
   final duration = SC.get.sessionStorage.appAnimationDuration.value;
 
@@ -28,26 +32,24 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
     super.initState();
     _tabController =
         TabController(length: ShipmentStatus.values.length, vsync: this);
+    _scrollController = ScrollController();
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _addItemsToAnimatedList();
+      final state = BlocProvider.of<ShipmentsStateProvider>(context).state;
+      if (state is ShipmentsCompletedState) {
+        final data = state.data;
+        _addItemsToAnimatedList(data);
+      }
     });
-    _scrollController = ScrollController()..addListener(_addItemOnScroll);
   }
 
-  void _addItemOnScroll() async {
+  void _addItemsToAnimatedList(ShipmentList _shipments) async {
     final ls = animationListKey.currentState!;
-    await Future.delayed(const Duration(seconds: 1));
-    shipmentData.add("3");
-    ls.insertItem(
-      shipmentData.length - 1,
-    );
-  }
-
-  void _addItemsToAnimatedList() async {
-    final ls = animationListKey.currentState!;
-    _removeItemsFromAnimatedList();
-    for (var i = 0; i < 4; i++) {
-      shipmentData.add("$i");
+    if (shipmentData.isNotEmpty) {
+      _removeItemsFromAnimatedList(ls);
+    }
+    for (var i = 0; i < _shipments.length; i++) {
+      shipmentData.add(_shipments[i]);
       ls.insertItem(
         shipmentData.length - 1,
       );
@@ -57,8 +59,7 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
     }
   }
 
-  void _removeItemsFromAnimatedList() {
-    final ls = animationListKey.currentState!;
+  void _removeItemsFromAnimatedList(AnimatedListState ls) {
     for (int i = shipmentData.length - 1; i >= 0; i--) {
       shipmentData.removeAt(i);
       ls.removeItem(i, (context, animation) {
@@ -92,7 +93,15 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
           controller: _tabController,
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           onTap: (index) {
-            _addItemsToAnimatedList();
+            // if (index == 0) {
+            //   _addItemsToAnimatedList(shipmentData);
+            //   return;
+            // }
+            // final status = _deriveStatus(index);
+            // final filtered = shipmentData
+            //     .where((shipment) => shipment.statusToEnum == status)
+            //     .toList();
+            // _addItemsToAnimatedList(filtered);
           },
           tabs: List.generate(
             shipmentStatuses.length,
@@ -125,48 +134,62 @@ class _ShipmentHistoryPageState extends State<ShipmentHistoryPage>
       ),
       body: SingleChildScrollView(
         controller: _scrollController,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Gap(20.0),
-            Text(
-              "Shipments",
-              style: textTheme.titleLarge!.copyWith(
-                fontWeight: FontWeight.w600,
-                color: AppColors.adaptiveDark,
-              ),
-            ),
-            Gap(10.0.h),
-            AnimatedList(
-              physics: const BouncingScrollPhysics(),
-              initialItemCount: shipmentData.length,
-              shrinkWrap: true,
-              key: animationListKey,
-              itemBuilder: (context, index, animation) {
-                return SlideTransition(
-                  position: animation.drive(Tween<Offset>(
-                    begin: const Offset(0, 1),
-                    end: Offset.zero,
-                  )),
-                  child: _ShipmentDetailsCard(
-                    status: index.isEven
-                        ? ShipingStatus.inProgress
-                        : ShipingStatus.pending,
+        child: ShipmentsStateBuilder(
+          builder: (data) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Gap(20.0),
+                Text(
+                  "Shipments",
+                  style: textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.adaptiveDark,
                   ),
-                );
-              },
-            ),
-            Gap(50.0.h),
-          ],
+                ),
+                Gap(10.0.h),
+                AnimatedList(
+                  physics: const BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  key: animationListKey,
+                  itemBuilder: (context, index, animation) {
+                    return SlideTransition(
+                      position: animation.drive(Tween<Offset>(
+                        begin: const Offset(0, 1),
+                        end: Offset.zero,
+                      )),
+                      child: _ShipmentDetailsCard(
+                        shipment: shipmentData[index],
+                      ),
+                    );
+                  },
+                ),
+                Gap(50.0.h),
+              ],
+            );
+          },
         ),
       ),
     );
   }
+
+  ShipingStatus _deriveStatus(int index) {
+    switch (index) {
+      case 2:
+        return ShipingStatus.inProgress;
+      case 1:
+        return ShipingStatus.loading;
+      case 3:
+        return ShipingStatus.pending;
+      default:
+        return ShipingStatus.inProgress;
+    }
+  }
 }
 
 class _ShipmentDetailsCard extends StatelessWidget {
-  final ShipingStatus status;
-  const _ShipmentDetailsCard({required this.status});
+  final ShipmentModel shipment;
+  const _ShipmentDetailsCard({required this.shipment});
 
   @override
   Widget build(BuildContext context) {
@@ -197,17 +220,17 @@ class _ShipmentDetailsCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    status.icon,
-                    color: status.color.withOpacity(.8),
+                    shipment.statusToEnum.icon,
+                    color: shipment.statusToEnum.color.withOpacity(.8),
                   ),
                   Gap(5.0.w),
                   Expanded(
                     child: Text(
-                      status.fullName,
+                      shipment.status ?? "N/A",
                       maxLines: 1,
                       style: textTheme.bodyMedium!.copyWith(
                         fontSize: 12.0,
-                        color: status.color.withOpacity(.8),
+                        color: shipment.statusToEnum.color.withOpacity(.8),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -234,7 +257,7 @@ class _ShipmentDetailsCard extends StatelessWidget {
                     ),
                     Gap(3.0.h),
                     Text(
-                      "Your delivery, #NEJ20089122231 from atlanta, is arriving today!",
+                      "Your delivery, #${shipment.trackingId} from atlanta, is arriving today!",
                       style:
                           textTheme.bodyMedium!.copyWith(color: AppColors.grey),
                     ),
@@ -251,7 +274,7 @@ class _ShipmentDetailsCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                "${Money(5000).formatted} USD",
+                "${Money(shipment.amount ?? 0.0).formatted} USD",
                 style: textTheme.bodyMedium!.copyWith(
                   color: AppColors.primary,
                   fontWeight: FontWeight.w600,
@@ -264,7 +287,9 @@ class _ShipmentDetailsCard extends StatelessWidget {
               ),
               Gap(8.0.w),
               Text(
-                "Sep 20,2023",
+                DateFormat.yMd().format(
+                  shipment.deliveryDate ?? DateTime.now(),
+                ),
                 style: textTheme.bodyMedium!.copyWith(
                   fontWeight: FontWeight.w400,
                 ),

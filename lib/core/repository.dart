@@ -10,11 +10,11 @@ class Repository {
 }
 
 class RepositoryFactory {
-  static Future<Repository> make(Env environment, Dio dio) async {
+  static Future<Repository> make(Env environment, [Dio? dio]) async {
     if (!environment.isProd) {
       return Repository(shipping: FakeShippingRepository());
     }
-    final httpClient = DioHttpClient(dio);
+    final httpClient = DioHttpClient(dio ?? Dio());
     return Repository(shipping: ShippingRepositoryImpl(httpClient));
   }
 }

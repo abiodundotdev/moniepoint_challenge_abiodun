@@ -4,6 +4,9 @@ import 'package:lottie/lottie.dart';
 import 'package:moniepoint/core/core.dart';
 import 'package:moniepoint/service_container.dart';
 
+import 'shipping/shipments_item_bloc/shipments_item_bloc.dart';
+import 'shipping/shipmentsbloc/shipments_bloc.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -70,6 +73,9 @@ class _SplashScreenState extends State<SplashScreen>
                               opacity: animationController.isCompleted ? 1 : 0,
                               curve: Curves.easeIn,
                               onEnd: () async {
+                                // This is to fetch the data
+                                ShipmentsStateProvider.fetch(context);
+                                ShipmentsItemStateProvider.fetch(context);
                                 alignmentAnimation.forward();
                               },
                               child: Text(

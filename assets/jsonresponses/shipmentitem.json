@@ -1,0 +1,35 @@
+{
+    "data": [
+      {
+        "package": "Mackbook pro",
+        "trackingId": "#NEJ78783783778232323",
+        "senderLocation": "Paris",
+        "receiverLocation": "Morroco"
+      },
+      {
+        "package": "Summer linen jacket",
+        "trackingId": "#NEJ7837837837823",
+        "receiverLocation": "Paris",
+        "senderLocation": "Barcelona"
+      },
+      {
+        "package": "Tampered-fit jeans AW",
+        "trackingId": "#NEJ2378327832783",
+        "receiverLocation": "Paris",
+        "senderLocation": "Columbia"
+      },
+      {
+        "package": "Slim fit jeans AW",
+        "trackingId": "#NEJ378327378322",
+        "receiverLocation": "Dhaka",
+        "senderLocation": "Bogota"
+      },
+      {
+        "package": "Office setup desk",
+        "trackingId": "#NEJ3783734783783",
+        "receiverLocation": "German",
+        "senderLocation": "France"
+      }
+    ],
+    "message": "List Fetched"
+  }

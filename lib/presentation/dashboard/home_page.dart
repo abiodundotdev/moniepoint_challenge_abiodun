@@ -24,8 +24,8 @@ class _HomePageState extends State<HomePage>
 
   @override
   void didPopNext() async {
-    bottomAnimationController.reverse();
-    await Future.delayed(animationDuration);
+    await bottomAnimationController.reverse();
+    await Future.delayed(const Duration(milliseconds: 200));
     _tabRoutesController.animateTo(
       0,
       duration: Duration(

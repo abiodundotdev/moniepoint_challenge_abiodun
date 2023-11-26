@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moniepoint/core/core.dart';
@@ -22,11 +21,11 @@ class SC {
         SessionStorage(),
       )
       ..add<AppHttpClient>(
-        DioHttpClient(Dio()),
+        DioHttpClient(await DioAdapter.make),
       )
       //The environment should be gotten from CLI
       ..add<Repository>(
-        await RepositoryFactory.make(Env.mock, Dio()),
+        await RepositoryFactory.make(Env.prod, await DioAdapter.make),
       )
       ..add<AppNavigator>(AppNavigator(rootNavigatorKey));
   }

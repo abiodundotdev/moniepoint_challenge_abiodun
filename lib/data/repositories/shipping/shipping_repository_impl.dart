@@ -1,6 +1,5 @@
 import 'package:moniepoint/core/core.dart';
 import 'package:moniepoint/domain/domain.dart';
-import 'package:moniepoint/domain/entities/aliases/models.dart';
 
 class ShippingRepositoryImpl implements ShippingRepositoryInterface {
   final AppHttpClient httpClient;
@@ -21,7 +20,7 @@ class ShippingRepositoryImpl implements ShippingRepositoryInterface {
 
   @override
   Future<ShipmentList> getShipments() async {
-    final response = await httpClient.get(Endpoints.shipping.shipmentData);
+    final response = await httpClient.get(Endpoints.shipping.shipments);
     return List.from(response.data['data'])
         .map((e) => ShipmentModel.fromJson(e))
         .toList();

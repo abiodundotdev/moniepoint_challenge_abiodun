@@ -4,6 +4,7 @@ export 'app_fake_data.dart';
 export 'app_fonts.dart';
 export 'app_icons.dart';
 export 'app_images.dart';
+export 'app_json_reponses.dart';
 export 'app_lotties.dart';
 export 'app_strings.dart';
 export 'app_widget_keys.dart';

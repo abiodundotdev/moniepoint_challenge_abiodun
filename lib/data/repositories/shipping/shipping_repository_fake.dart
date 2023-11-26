@@ -1,5 +1,5 @@
+import 'package:moniepoint/core/core.dart';
 import 'package:moniepoint/domain/domain.dart';
-import 'package:moniepoint/domain/entities/aliases/models.dart';
 
 class FakeShippingRepository implements ShippingRepositoryInterface {
   @override
@@ -10,11 +10,17 @@ class FakeShippingRepository implements ShippingRepositoryInterface {
 
   @override
   Future<ShipmentItemList> getShipmentItems() async {
-    return [];
+    final response = await loadStringAsMap(AppJsonResponses.shipmentItems);
+    return List.from(response['data'])
+        .map((e) => ShipmentItemModel.fromJson(e))
+        .toList();
   }
 
   @override
   Future<ShipmentList> getShipments() async {
-    return [];
+    final response = await loadStringAsMap(AppJsonResponses.shipments);
+    return List.from(response['data'])
+        .map((e) => ShipmentModel.fromJson(e))
+        .toList();
   }
 }

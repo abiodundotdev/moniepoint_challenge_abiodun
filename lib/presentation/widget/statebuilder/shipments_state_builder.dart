@@ -32,16 +32,13 @@ class ShipmentsStateBuilder extends StatelessWidget {
             ),
           ),
           loading: () {
-            if (loading != null) {
-              return loading!();
-            }
             return const Center(
               child: CircularProgressIndicator.adaptive(
                 backgroundColor: Colors.white,
               ),
             );
           },
-          completed: (user) => builder(user),
+          completed: (data) => builder(data),
         );
       },
     );

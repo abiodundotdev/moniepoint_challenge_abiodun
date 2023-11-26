@@ -29,9 +29,8 @@ mixin ShippingUsecases {
     try {
       final result = await repository.shipping.getShipments();
       emit(ShipmentsCompletedState(result));
-    } catch (e) {
-      // final res = ErrorResponse(e);
-      //emit(PromotionsError(res.message));
+    } catch (error) {
+      emit(const ShipmentsErrorState("Error occur"));
     }
   }
 
@@ -42,8 +41,7 @@ mixin ShippingUsecases {
       final result = await repository.shipping.getShipmentItems();
       emit(ShipmentsItemCompleted(result));
     } catch (e) {
-      // final res = ErrorResponse(e);
-      //emit(PromotionsError(res.message));
+      emit(const ShipmentsItemErrorState("Error occur"));
     }
   }
 }

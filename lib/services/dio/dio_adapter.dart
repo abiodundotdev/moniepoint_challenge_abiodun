@@ -14,7 +14,7 @@ class DioAdapter {
         connectTimeout: AppConstants.requestDuration,
         receiveTimeout: AppConstants.requestDuration,
         sendTimeout: AppConstants.requestDuration,
-        baseUrl: "Environment.fromConfig.httpBaseUrl",
+        baseUrl: Env.prod.httpBaseUrl,
         headers: <String, dynamic>{
           'fcmtoken': "fcmToken",
           'idempotency-key': "${Random().nextInt(44444)}",

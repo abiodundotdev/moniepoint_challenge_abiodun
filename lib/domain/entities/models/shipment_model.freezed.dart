@@ -165,14 +165,15 @@ class __$$_ShipmentModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ShipmentModel implements _ShipmentModel {
+class _$_ShipmentModel extends _ShipmentModel {
   _$_ShipmentModel(
       {this.id,
       @JsonKey(name: 'tracking_id') this.trackingId,
       @JsonKey(name: 'delivery_date') this.deliveryDate,
       this.address,
       this.status,
-      this.amount});
+      this.amount})
+      : super._();
 
   factory _$_ShipmentModel.fromJson(Map<String, dynamic> json) =>
       _$$_ShipmentModelFromJson(json);
@@ -231,7 +232,7 @@ class _$_ShipmentModel implements _ShipmentModel {
   }
 }
 
-abstract class _ShipmentModel implements ShipmentModel {
+abstract class _ShipmentModel extends ShipmentModel {
   factory _ShipmentModel(
       {final int? id,
       @JsonKey(name: 'tracking_id') final String? trackingId,
@@ -239,6 +240,7 @@ abstract class _ShipmentModel implements ShipmentModel {
       final String? address,
       final String? status,
       final int? amount}) = _$_ShipmentModel;
+  _ShipmentModel._() : super._();
 
   factory _ShipmentModel.fromJson(Map<String, dynamic> json) =
       _$_ShipmentModel.fromJson;
