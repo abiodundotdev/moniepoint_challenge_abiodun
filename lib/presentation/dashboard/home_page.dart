@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage>
       bottom: PreferredSize(
         key: AppWidgetKeys.bottomNavBar,
         preferredSize: Size.fromHeight(
-          kBottomNavigationBarHeight + systemPadding.bottom,
+          kBottomNavigationBarHeight + systemPadding.bottom + 5.h,
         ),
         child: AnimatedBuilder(
             animation: bottomAnimationController,
