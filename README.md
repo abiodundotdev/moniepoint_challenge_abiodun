@@ -46,4 +46,3 @@ flutter test
 <img src="https://raw.githubusercontent.com/abiodundotdev/moniepoint_challenge_abiodun/main/docimg/9.png?raw=true" width= "300px" height ="500px" />
 <img src="https://raw.githubusercontent.com/abiodundotdev/moniepoint_challenge_abiodun/main/docimg/10.png?raw=true" width= "300px" height ="500px" />
 </p>
-# dukka_test
